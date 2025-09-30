@@ -504,7 +504,7 @@ export default function QuizApp() {
   }
 
   // Renderizar tela de quiz completado
-  if (gameState.isQuizComplete) {
+  if (gameState.isQuizComplete && gameState.selectedCategory) {
     const timeTaken =
       gameState.startTime && gameState.endTime
         ? (gameState.endTime - gameState.startTime) / 1000
@@ -629,6 +629,10 @@ export default function QuizApp() {
   }
 
   // Renderizar quiz em andamento
+  if (!gameState.selectedCategory) {
+    return null; // Não deve acontecer, mas protege contra erro de TypeScript
+  }
+
   const currentQuestion =
     gameState.selectedCategory.questions[gameState.currentQuestionIndex];
   const progress =
