@@ -1,0 +1,1410 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kwizi Enhanced - Protótipo Visual</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+            background: linear-gradient(135deg, #EFF6FF 0%, #E0E7FF 100%);
+            min-height: 100vh;
+            padding: 2rem;
+            transition: all 0.3s ease;
+        }
+
+        body.dark {
+            background: #111827;
+            color: #F9FAFB;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Header */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 3rem;
+            animation: slideDown 0.5s ease;
+        }
+
+        .logo h1 {
+            font-size: 2.5rem;
+            background: linear-gradient(135deg, #2563EB, #9333EA);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .logo p {
+            color: #6B7280;
+            margin-top: 0.5rem;
+        }
+
+        body.dark .logo p {
+            color: #9CA3AF;
+        }
+
+        .header-buttons {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .icon-btn {
+            background: white;
+            border: none;
+            padding: 1rem;
+            border-radius: 1rem;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            font-size: 1.5rem;
+        }
+
+        body.dark .icon-btn {
+            background: #1F2937;
+        }
+
+        .icon-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 8px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Stats Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+            animation: fadeIn 0.5s ease 0.2s both;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        body.dark .stat-card {
+            background: #1F2937;
+        }
+
+        .stat-icon {
+            padding: 1rem;
+            border-radius: 1rem;
+            font-size: 2rem;
+        }
+
+        .stat-icon.blue {
+            background: #DBEAFE;
+        }
+
+        .stat-icon.green {
+            background: #D1FAE5;
+        }
+
+        .stat-icon.purple {
+            background: #E9D5FF;
+        }
+
+        body.dark .stat-icon.blue {
+            background: rgba(37, 99, 235, 0.2);
+        }
+
+        body.dark .stat-icon.green {
+            background: rgba(16, 185, 129, 0.2);
+        }
+
+        body.dark .stat-icon.purple {
+            background: rgba(147, 51, 234, 0.2);
+        }
+
+        .stat-info h3 {
+            font-size: 0.9rem;
+            color: #6B7280;
+            margin-bottom: 0.5rem;
+        }
+
+        body.dark .stat-info h3 {
+            color: #9CA3AF;
+        }
+
+        .stat-info p {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #111827;
+        }
+
+        body.dark .stat-info p {
+            color: white;
+        }
+
+        /* Categories */
+        .section-title {
+            font-size: 1.75rem;
+            margin-bottom: 1.5rem;
+            color: #111827;
+        }
+
+        body.dark .section-title {
+            color: white;
+        }
+
+        .categories-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 1.5rem;
+            animation: fadeIn 0.5s ease 0.4s both;
+        }
+
+        .category-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        body.dark .category-card {
+            background: #1F2937;
+        }
+
+        .category-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            opacity: 0.1;
+            transition: opacity 0.3s ease;
+        }
+
+        .category-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+        }
+
+        .category-card:hover::before {
+            opacity: 0.2;
+        }
+
+        .category-card.programming::before {
+            background: linear-gradient(135deg, #3B82F6, #06B6D4);
+        }
+
+        .category-card.science::before {
+            background: linear-gradient(135deg, #10B981, #059669);
+        }
+
+        .category-card.history::before {
+            background: linear-gradient(135deg, #F59E0B, #F97316);
+        }
+
+        .category-card.geography::before {
+            background: linear-gradient(135deg, #6366F1, #A855F7);
+        }
+
+        .category-card.math::before {
+            background: linear-gradient(135deg, #EF4444, #EC4899);
+        }
+
+        .category-card.culture::before {
+            background: linear-gradient(135deg, #A855F7, #EC4899);
+        }
+
+        .category-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .category-icon {
+            font-size: 3rem;
+        }
+
+        .category-questions {
+            font-size: 0.9rem;
+            color: #6B7280;
+        }
+
+        body.dark .category-questions {
+            color: #9CA3AF;
+        }
+
+        .category-name {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+            position: relative;
+            z-index: 1;
+            color: #111827;
+        }
+
+        body.dark .category-name {
+            color: white;
+        }
+
+        .category-desc {
+            color: #6B7280;
+            margin-bottom: 1rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        body.dark .category-desc {
+            color: #9CA3AF;
+        }
+
+        .category-score {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #6B7280;
+            font-size: 0.9rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        body.dark .category-score {
+            color: #9CA3AF;
+        }
+
+        /* Quiz Screen */
+        .quiz-screen {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .quiz-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .quiz-nav {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .score-badge {
+            background: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 1rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        body.dark .score-badge {
+            background: #1F2937;
+        }
+
+        /* Progress Bar */
+        .progress-section {
+            margin-bottom: 2rem;
+        }
+
+        .progress-info {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+            color: #6B7280;
+        }
+
+        body.dark .progress-info {
+            color: #9CA3AF;
+        }
+
+        .progress-bar {
+            height: 0.75rem;
+            background: #E5E7EB;
+            border-radius: 999px;
+            overflow: hidden;
+        }
+
+        body.dark .progress-bar {
+            background: #374151;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #3B82F6, #06B6D4);
+            border-radius: 999px;
+            transition: width 0.5s ease;
+        }
+
+        /* Question Card */
+        .question-card {
+            background: white;
+            padding: 2.5rem;
+            border-radius: 2rem;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            margin-bottom: 1.5rem;
+            animation: slideUp 0.3s ease;
+        }
+
+        body.dark .question-card {
+            background: #1F2937;
+        }
+
+        .question-meta {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 1.5rem;
+        }
+
+        .difficulty-badge {
+            padding: 0.5rem 1rem;
+            border-radius: 999px;
+            font-size: 0.9rem;
+            font-weight: bold;
+        }
+
+        .difficulty-badge.easy {
+            background: #D1FAE5;
+            color: #059669;
+        }
+
+        .difficulty-badge.medium {
+            background: #FEF3C7;
+            color: #D97706;
+        }
+
+        .difficulty-badge.hard {
+            background: #FEE2E2;
+            color: #DC2626;
+        }
+
+        body.dark .difficulty-badge.easy {
+            background: rgba(16, 185, 129, 0.2);
+            color: #34D399;
+        }
+
+        body.dark .difficulty-badge.medium {
+            background: rgba(245, 158, 11, 0.2);
+            color: #FBBF24;
+        }
+
+        body.dark .difficulty-badge.hard {
+            background: rgba(239, 68, 68, 0.2);
+            color: #F87171;
+        }
+
+        .points-badge {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #6B7280;
+            font-weight: bold;
+        }
+
+        body.dark .points-badge {
+            color: #9CA3AF;
+        }
+
+        .question-text {
+            font-size: 1.5rem;
+            font-weight: bold;
+            line-height: 1.6;
+            margin-bottom: 2rem;
+            color: #111827;
+        }
+
+        body.dark .question-text {
+            color: white;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .option {
+            padding: 1.25rem;
+            border: 2px solid #E5E7EB;
+            border-radius: 1rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            background: #F9FAFB;
+            font-size: 1.1rem;
+        }
+
+        body.dark .option {
+            border-color: #374151;
+            background: rgba(55, 65, 81, 0.5);
+            color: white;
+        }
+
+        .option:hover {
+            background: #F3F4F6;
+            border-color: #3B82F6;
+            transform: translateX(5px);
+        }
+
+        body.dark .option:hover {
+            background: #374151;
+            border-color: #3B82F6;
+        }
+
+        .option.selected {
+            background: linear-gradient(135deg, #3B82F6, #06B6D4);
+            border-color: transparent;
+            color: white;
+            font-weight: bold;
+        }
+
+        .option.correct {
+            background: #D1FAE5;
+            border-color: #10B981;
+            color: #059669;
+        }
+
+        body.dark .option.correct {
+            background: rgba(16, 185, 129, 0.2);
+            border-color: #10B981;
+            color: #34D399;
+        }
+
+        .option.incorrect {
+            background: #FEE2E2;
+            border-color: #EF4444;
+            color: #DC2626;
+        }
+
+        body.dark .option.incorrect {
+            background: rgba(239, 68, 68, 0.2);
+            border-color: #EF4444;
+            color: #F87171;
+        }
+
+        /* Explanation Popup */
+        .explanation-popup {
+            background: linear-gradient(135deg, #D1FAE5, #A7F3D0);
+            padding: 2rem;
+            border-radius: 2rem;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            animation: slideUp 0.3s ease;
+            display: none;
+        }
+
+        body.dark .explanation-popup {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(16, 185, 129, 0.3));
+        }
+
+        .explanation-popup.incorrect {
+            background: linear-gradient(135deg, #FEE2E2, #FECACA);
+        }
+
+        body.dark .explanation-popup.incorrect {
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.2), rgba(239, 68, 68, 0.3));
+        }
+
+        .explanation-header {
+            display: flex;
+            align-items: start;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .explanation-icon {
+            width: 3rem;
+            height: 3rem;
+            background: #10B981;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            flex-shrink: 0;
+        }
+
+        .explanation-popup.incorrect .explanation-icon {
+            background: #EF4444;
+        }
+
+        .explanation-title {
+            font-size: 1.75rem;
+            font-weight: bold;
+            color: #065F46;
+        }
+
+        body.dark .explanation-title {
+            color: #D1FAE5;
+        }
+
+        .explanation-popup.incorrect .explanation-title {
+            color: #991B1B;
+        }
+
+        body.dark .explanation-popup.incorrect .explanation-title {
+            color: #FEE2E2;
+        }
+
+        .explanation-box {
+            background: rgba(255, 255, 255, 0.6);
+            padding: 1.5rem;
+            border-radius: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        body.dark .explanation-box {
+            background: rgba(31, 41, 55, 0.6);
+        }
+
+        .explanation-label {
+            font-weight: bold;
+            color: #111827;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        body.dark .explanation-label {
+            color: white;
+        }
+
+        .explanation-text {
+            color: #374151;
+            line-height: 1.6;
+        }
+
+        body.dark .explanation-text {
+            color: #D1D5DB;
+        }
+
+        .next-btn {
+            width: 100%;
+            padding: 1.25rem;
+            background: linear-gradient(135deg, #10B981, #059669);
+            color: white;
+            border: none;
+            border-radius: 1rem;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .explanation-popup.incorrect .next-btn {
+            background: linear-gradient(135deg, #3B82F6, #9333EA);
+        }
+
+        .next-btn:hover {
+            transform: scale(1.02);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Results Screen */
+        .results-screen {
+            display: none;
+            max-width: 800px;
+            margin: 0 auto;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .results-card {
+            background: white;
+            padding: 3rem;
+            border-radius: 2rem;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        body.dark .results-card {
+            background: #1F2937;
+        }
+
+        .results-emoji {
+            font-size: 5rem;
+            margin-bottom: 1rem;
+            animation: bounce 0.5s ease;
+        }
+
+        .results-title {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+            color: #111827;
+        }
+
+        body.dark .results-title {
+            color: white;
+        }
+
+        .results-subtitle {
+            font-size: 1.25rem;
+            color: #6B7280;
+            margin-bottom: 2rem;
+        }
+
+        body.dark .results-subtitle {
+            color: #9CA3AF;
+        }
+
+        .results-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .result-stat {
+            padding: 1.5rem;
+            border-radius: 1rem;
+            text-align: center;
+        }
+
+        .result-stat.blue {
+            background: linear-gradient(135deg, #DBEAFE, #BFDBFE);
+        }
+
+        .result-stat.green {
+            background: linear-gradient(135deg, #D1FAE5, #A7F3D0);
+        }
+
+        .result-stat.purple {
+            background: linear-gradient(135deg, #E9D5FF, #DDD6FE);
+        }
+
+        body.dark .result-stat.blue {
+            background: linear-gradient(135deg, rgba(37, 99, 235, 0.2), rgba(37, 99, 235, 0.3));
+        }
+
+        body.dark .result-stat.green {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(16, 185, 129, 0.3));
+        }
+
+        body.dark .result-stat.purple {
+            background: linear-gradient(135deg, rgba(147, 51, 234, 0.2), rgba(147, 51, 234, 0.3));
+        }
+
+        .result-stat-icon {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .result-stat-label {
+            font-size: 0.9rem;
+            color: #6B7280;
+            margin-bottom: 0.25rem;
+        }
+
+        body.dark .result-stat-label {
+            color: #9CA3AF;
+        }
+
+        .result-stat-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #111827;
+        }
+
+        body.dark .result-stat-value {
+            color: white;
+        }
+
+        .result-stat-sub {
+            font-size: 0.85rem;
+            color: #6B7280;
+        }
+
+        body.dark .result-stat-sub {
+            color: #9CA3AF;
+        }
+
+        .results-actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .action-btn {
+            padding: 1.25rem;
+            border: none;
+            border-radius: 1rem;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .action-btn.primary {
+            background: linear-gradient(135deg, #3B82F6, #9333EA);
+            color: white;
+        }
+
+        .action-btn.secondary {
+            background: #E5E7EB;
+            color: #111827;
+        }
+
+        body.dark .action-btn.secondary {
+            background: #374151;
+            color: white;
+        }
+
+        .action-btn:hover {
+            transform: scale(1.02);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Achievements Modal */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(4px);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 2.5rem;
+            border-radius: 2rem;
+            max-width: 800px;
+            width: 100%;
+            max-height: 80vh;
+            overflow-y: auto;
+            animation: slideUp 0.3s ease;
+        }
+
+        body.dark .modal-content {
+            background: #1F2937;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .modal-title {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #111827;
+        }
+
+        body.dark .modal-title {
+            color: white;
+        }
+
+        .close-btn {
+            background: #E5E7EB;
+            border: none;
+            width: 2.5rem;
+            height: 2.5rem;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.25rem;
+            transition: all 0.3s ease;
+        }
+
+        body.dark .close-btn {
+            background: #374151;
+            color: white;
+        }
+
+        .close-btn:hover {
+            transform: scale(1.1);
+        }
+
+        .achievements-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1rem;
+        }
+
+        .achievement-card {
+            padding: 1.25rem;
+            border: 2px solid #E5E7EB;
+            border-radius: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        body.dark .achievement-card {
+            border-color: #374151;
+        }
+
+        .achievement-card.unlocked {
+            border-color: #FBBF24;
+            background: #FEF3C7;
+        }
+
+        body.dark .achievement-card.unlocked {
+            border-color: #FBBF24;
+            background: rgba(251, 191, 36, 0.2);
+        }
+
+        .achievement-card.locked {
+            opacity: 0.5;
+            background: #F9FAFB;
+        }
+
+        body.dark .achievement-card.locked {
+            background: rgba(55, 65, 81, 0.5);
+        }
+
+        .achievement-header {
+            display: flex;
+            align-items: start;
+            gap: 1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .achievement-icon {
+            font-size: 2rem;
+        }
+
+        .achievement-name {
+            font-weight: bold;
+            color: #111827;
+        }
+
+        body.dark .achievement-name {
+            color: white;
+        }
+
+        .achievement-desc {
+            color: #6B7280;
+            font-size: 0.9rem;
+        }
+
+        body.dark .achievement-desc {
+            color: #9CA3AF;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideDown {
+            from {
+                transform: translateY(-20px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(20px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes bounce {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.1);
+            }
+        }
+
+        /* Controls (for demo) */
+        .demo-controls {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: white;
+            padding: 1rem;
+            border-radius: 1rem;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            z-index: 999;
+        }
+
+        body.dark .demo-controls {
+            background: #1F2937;
+        }
+
+        .demo-controls h4 {
+            margin-bottom: 0.75rem;
+            font-size: 0.9rem;
+            color: #6B7280;
+        }
+
+        body.dark .demo-controls h4 {
+            color: #9CA3AF;
+        }
+
+        .demo-controls button {
+            display: block;
+            width: 100%;
+            margin-bottom: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: #3B82F6;
+            color: white;
+            border: none;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.2s ease;
+        }
+
+        .demo-controls button:hover {
+            background: #2563EB;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            body {
+                padding: 1rem;
+            }
+
+            .header h1 {
+                font-size: 1.75rem;
+            }
+
+            .stats-grid,
+            .categories-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .question-text {
+                font-size: 1.25rem;
+            }
+
+            .results-actions {
+                grid-template-columns: 1fr;
+            }
+
+            .demo-controls {
+                bottom: 1rem;
+                right: 1rem;
+                left: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Home Screen -->
+    <div id="homeScreen" class="container">
+        <header class="header">
+            <div class="logo">
+                <h1>Kwizi Enhanced</h1>
+                <p>Aprenda de forma interativa e divertida! 🎯</p>
+            </div>
+            <div class="header-buttons">
+                <button class="icon-btn" onclick="toggleAchievements()" title="Conquistas">🏆</button>
+                <button class="icon-btn" onclick="toggleDarkMode()" title="Alternar tema">
+                    <span id="themeIcon">🌙</span>
+                </button>
+            </div>
+        </header>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon blue">🎯</div>
+                <div class="stat-info">
+                    <h3>Pontuação Total</h3>
+                    <p>450</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon green">✓</div>
+                <div class="stat-info">
+                    <h3>Quizzes Completados</h3>
+                    <p>8</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon purple">🏆</div>
+                <div class="stat-info">
+                    <h3>Conquistas</h3>
+                    <p>3/6</p>
+                </div>
+            </div>
+        </div>
+
+        <h2 class="section-title">Escolha um Tema</h2>
+        <div class="categories-grid">
+            <div class="category-card programming" onclick="startQuiz()">
+                <div class="category-header">
+                    <span class="category-icon">💻</span>
+                    <span class="category-questions">5 questões</span>
+                </div>
+                <h3 class="category-name">Programação</h3>
+                <p class="category-desc">Teste seus conhecimentos em desenvolvimento de software</p>
+                <div class="category-score">
+                    <span>🏆</span>
+                    <span>Melhor: 80 pts</span>
+                </div>
+            </div>
+
+            <div class="category-card science" onclick="startQuiz()">
+                <div class="category-header">
+                    <span class="category-icon">🔬</span>
+                    <span class="category-questions">5 questões</span>
+                </div>
+                <h3 class="category-name">Ciências</h3>
+                <p class="category-desc">Explore os mistérios da ciência</p>
+                <div class="category-score">
+                    <span>🏆</span>
+                    <span>Melhor: 70 pts</span>
+                </div>
+            </div>
+
+            <div class="category-card history" onclick="startQuiz()">
+                <div class="category-header">
+                    <span class="category-icon">📜</span>
+                    <span class="category-questions">5 questões</span>
+                </div>
+                <h3 class="category-name">História</h3>
+                <p class="category-desc">Viaje no tempo através dos eventos históricos</p>
+                <div class="category-score">
+                    <span>🏆</span>
+                    <span>Melhor: 90 pts</span>
+                </div>
+            </div>
+
+            <div class="category-card geography" onclick="startQuiz()">
+                <div class="category-header">
+                    <span class="category-icon">🌍</span>
+                    <span class="category-questions">5 questões</span>
+                </div>
+                <h3 class="category-name">Geografia</h3>
+                <p class="category-desc">Descubra os segredos do nosso planeta</p>
+            </div>
+
+            <div class="category-card math" onclick="startQuiz()">
+                <div class="category-header">
+                    <span class="category-icon">🔢</span>
+                    <span class="category-questions">5 questões</span>
+                </div>
+                <h3 class="category-name">Matemática</h3>
+                <p class="category-desc">Desafie sua mente com números e lógica</p>
+            </div>
+
+            <div class="category-card culture" onclick="startQuiz()">
+                <div class="category-header">
+                    <span class="category-icon">🎬</span>
+                    <span class="category-questions">5 questões</span>
+                </div>
+                <h3 class="category-name">Cultura Pop</h3>
+                <p class="category-desc">Teste seu conhecimento sobre filmes, música e entretenimento</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quiz Screen -->
+    <div id="quizScreen" class="quiz-screen container">
+        <div class="quiz-header">
+            <button class="icon-btn" onclick="goHome()" title="Voltar">🏠</button>
+            <div class="quiz-nav">
+                <div class="score-badge">
+                    <span>🎯</span>
+                    <span><strong>20 pts</strong></span>
+                </div>
+                <button class="icon-btn" onclick="toggleDarkMode()" title="Alternar tema">
+                    <span id="themeIcon2">🌙</span>
+                </button>
+            </div>
+        </div>
+
+        <div class="progress-section">
+            <div class="progress-info">
+                <span>Questão 2 de 5</span>
+                <span>40%</span>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" style="width: 40%"></div>
+            </div>
+        </div>
+
+        <div class="question-card">
+            <div class="question-meta">
+                <span class="difficulty-badge medium">Médio</span>
+                <span class="points-badge">
+                    <span>⚡</span>
+                    <span>20 pts</span>
+                </span>
+            </div>
+
+            <h3 class="question-text">
+                Qual é a principal diferença entre let e var em JavaScript?
+            </h3>
+
+            <div class="options">
+                <div class="option">let é mais rápido que var</div>
+                <div class="option">var tem escopo de bloco, let tem escopo de função</div>
+                <div class="option selected" onclick="showExplanation(true)">let tem escopo de bloco, var tem escopo de função</div>
+                <div class="option">Não há diferença</div>
+            </div>
+        </div>
+
+        <div id="explanationPopup" class="explanation-popup">
+            <div class="explanation-header">
+                <div class="explanation-icon">✓</div>
+                <div>
+                    <h3 class="explanation-title">🎉 Resposta Correta!</h3>
+                </div>
+            </div>
+
+            <div class="explanation-box">
+                <div class="explanation-label">💡 Explicação:</div>
+                <p class="explanation-text">
+                    A principal diferença é que 'let' tem escopo de bloco (block scope), enquanto 'var' tem escopo de função (function scope). Isso significa que uma variável declarada com 'let' só existe dentro do bloco {} onde foi declarada, enquanto 'var' é visível em toda a função.
+                </p>
+            </div>
+
+            <button class="next-btn" onclick="showResults()">
+                Ver Resultados
+            </button>
+        </div>
+    </div>
+
+    <!-- Results Screen -->
+    <div id="resultsScreen" class="results-screen">
+        <div class="results-card">
+            <div class="results-emoji">🎉</div>
+            <h2 class="results-title">Excelente!</h2>
+            <p class="results-subtitle">Quiz Programação Concluído</p>
+
+            <div class="results-stats">
+                <div class="result-stat blue">
+                    <div class="result-stat-icon">🎯</div>
+                    <p class="result-stat-label">Pontuação</p>
+                    <p class="result-stat-value">80/100</p>
+                    <p class="result-stat-sub">80%</p>
+                </div>
+
+                <div class="result-stat green">
+                    <div class="result-stat-icon">✓</div>
+                    <p class="result-stat-label">Corretas</p>
+                    <p class="result-stat-value">4/5</p>
+                </div>
+
+                <div class="result-stat purple">
+                    <div class="result-stat-icon">⏱️</div>
+                    <p class="result-stat-label">Tempo</p>
+                    <p class="result-stat-value">1:47</p>
+                </div>
+            </div>
+
+            <div class="results-actions">
+                <button class="action-btn primary" onclick="startQuiz()">
+                    <span>🔄</span>
+                    <span>Tentar Novamente</span>
+                </button>
+                <button class="action-btn secondary" onclick="goHome()">
+                    <span>🏠</span>
+                    <span>Página Inicial</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Achievements Modal -->
+    <div id="achievementsModal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">🏆 Suas Conquistas</h2>
+                <button class="close-btn" onclick="toggleAchievements()">✕</button>
+            </div>
+
+            <div class="achievements-grid">
+                <div class="achievement-card unlocked">
+                    <div class="achievement-header">
+                        <span class="achievement-icon">🏆</span>
+                        <div>
+                            <div class="achievement-name">Primeira Vitória</div>
+                            <p class="achievement-desc">Complete seu primeiro quiz</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="achievement-card unlocked">
+                    <div class="achievement-header">
+                        <span class="achievement-icon">⭐</span>
+                        <div>
+                            <div class="achievement-name">Pontuação Perfeita</div>
+                            <p class="achievement-desc">Acerte todas as questões de um quiz</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="achievement-card unlocked">
+                    <div class="achievement-header">
+                        <span class="achievement-icon">⚡</span>
+                        <div>
+                            <div class="achievement-name">Velocista</div>
+                            <p class="achievement-desc">Complete um quiz em menos de 2 minutos</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="achievement-card locked">
+                    <div class="achievement-header">
+                        <span class="achievement-icon">🗺️</span>
+                        <div>
+                            <div class="achievement-name">Explorador</div>
+                            <p class="achievement-desc">Jogue todos os temas disponíveis</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="achievement-card locked">
+                    <div class="achievement-header">
+                        <span class="achievement-icon">👑</span>
+                        <div>
+                            <div class="achievement-name">Mestre</div>
+                            <p class="achievement-desc">Acumule 1000 pontos</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="achievement-card locked">
+                    <div class="achievement-header">
+                        <span class="achievement-icon">🎯</span>
+                        <div>
+                            <div class="achievement-name">Consistente</div>
+                            <p class="achievement-desc">Complete 10 quizzes</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Demo Controls -->
+    <div class="demo-controls">
+        <h4>🎮 Navegação do Demo</h4>
+        <button onclick="goHome()">🏠 Tela Inicial</button>
+        <button onclick="startQuiz()">📝 Tela de Quiz</button>
+        <button onclick="showExplanation()">💡 Ver Explicação</button>
+        <button onclick="showResults()">🏆 Ver Resultados</button>
+        <button onclick="toggleDarkMode()">🌙 Dark Mode</button>
+        <button onclick="toggleAchievements()">🏆 Conquistas</button>
+    </div>
+
+    <script>
+        // Screen Management
+        function goHome() {
+            document.getElementById('homeScreen').style.display = 'block';
+            document.getElementById('quizScreen').style.display = 'none';
+            document.getElementById('resultsScreen').style.display = 'none';
+            document.getElementById('explanationPopup').style.display = 'none';
+        }
+
+        function startQuiz() {
+            document.getElementById('homeScreen').style.display = 'none';
+            document.getElementById('quizScreen').style.display = 'block';
+            document.getElementById('resultsScreen').style.display = 'none';
+            document.getElementById('explanationPopup').style.display = 'none';
+        }
+
+        function showExplanation(correct = true) {
+            const popup = document.getElementById('explanationPopup');
+            popup.style.display = 'block';
+            
+            if (!correct) {
+                popup.classList.add('incorrect');
+            } else {
+                popup.classList.remove('incorrect');
+            }
+
+            // Add correct/incorrect classes to options
+            const options = document.querySelectorAll('.option');
+            options[2].classList.add('correct');
+            if (!correct) {
+                options[0].classList.add('incorrect');
+            }
+        }
+
+        function showResults() {
+            document.getElementById('homeScreen').style.display = 'none';
+            document.getElementById('quizScreen').style.display = 'none';
+            document.getElementById('resultsScreen').style.display = 'block';
+        }
+
+        // Dark Mode
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark');
+            const icon1 = document.getElementById('themeIcon');
+            const icon2 = document.getElementById('themeIcon2');
+            const isDark = document.body.classList.contains('dark');
+            
+            if (icon1) icon1.textContent = isDark ? '☀️' : '🌙';
+            if (icon2) icon2.textContent = isDark ? '☀️' : '🌙';
+        }
+
+        // Achievements Modal
+        function toggleAchievements() {
+            const modal = document.getElementById('achievementsModal');
+            if (modal.style.display === 'flex') {
+                modal.style.display = 'none';
+            } else {
+                modal.style.display = 'flex';
+            }
+        }
+
+        // Close modal when clicking outside
+        document.getElementById('achievementsModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                toggleAchievements();
+            }
+        });
+
+        // Initialize
+        goHome();
+    </script>
+</body>
+</html>
