@@ -6,7 +6,7 @@ import './globals.css';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: 'QuizLabStudy - Aprenda de Forma Interativa',
+  title: 'QuizLabHub - Aprenda de Forma Interativa',
   description:
     'Um quiz app moderno e interativo para aprender sobre diversos temas de forma divertida',
   icons: {
