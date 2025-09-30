@@ -45,7 +45,7 @@ interface UserProgress {
 }
 
 export default function QuizApp() {
-  const [darkMode, setDarkMode] = useState(false);
+  const [darkMode, setDarkMode] = useState(true);
   const [showAchievements, setShowAchievements] = useState(false);
   const [gameState, setGameState] = useState<GameState>({
     selectedCategory: null,
