@@ -10,9 +10,9 @@ export const metadata: Metadata = {
   description:
     'Um quiz app moderno e interativo para aprender sobre diversos temas de forma divertida',
   icons: {
-    icon: '/quiz-icon.svg',
-    shortcut: '/quiz-icon.svg',
-    apple: '/quiz-icon.svg',
+    icon: '/quiz.svg',
+    shortcut: '/quiz.svg',
+    apple: '/quiz.svg',
   },
 };
 
