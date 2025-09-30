@@ -298,7 +298,7 @@ export default function QuizApp() {
           >
             <div>
               <h1 className='text-4xl md:text-5xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent'>
-                QuizLab
+                Kwizi Enhanced
               </h1>
               <p className='text-gray-600 dark:text-gray-400 mt-2'>
                 Aprenda de forma interativa e divertida! 🎯
@@ -752,7 +752,7 @@ export default function QuizApp() {
                     buttonClass =
                       'bg-red-50 dark:bg-red-900/20 border-2 border-red-500 dark:border-red-500';
                   }
-                } else if (isSelected) {
+                } else if (isSelected && gameState.selectedCategory) {
                   buttonClass = `bg-gradient-to-r ${gameState.selectedCategory.color} border-2 border-transparent text-white`;
                 }
 
