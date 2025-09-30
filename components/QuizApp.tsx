@@ -298,7 +298,7 @@ export default function QuizApp() {
           >
             <div>
               <h1 className='text-4xl md:text-5xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent'>
-                QuizLabStudy
+                QuizLabHub
               </h1>
               <p className='text-gray-600 dark:text-gray-400 mt-2'>
                 Aprenda de forma interativa e divertida! 🎯
