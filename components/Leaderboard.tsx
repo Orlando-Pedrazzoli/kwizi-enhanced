@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import Image from 'next/image';
 import {
   Trophy,
   Medal,
@@ -387,10 +388,12 @@ export default function Leaderboard({
                 </Badge>
               </div>
               <div className='relative w-20 h-20 mx-auto mb-3'>
-                <img
-                  src={topThree[1].avatar}
+                <Image
+                  src={topThree[1].avatar || '/default-avatar.png'}
                   alt={topThree[1].username}
-                  className='w-full h-full rounded-full border-4 border-gray-400'
+                  width={80}
+                  height={80}
+                  className='rounded-full border-4 border-gray-400'
                 />
                 <div className='absolute -bottom-1 -right-1'>
                   {getRankIcon(2)}
@@ -436,10 +439,12 @@ export default function Leaderboard({
                   transition={{ duration: 2, repeat: Infinity }}
                   className='absolute inset-0 bg-gradient-to-r from-yellow-400 to-orange-400 rounded-full blur-xl opacity-50'
                 />
-                <img
-                  src={topThree[0].avatar}
+                <Image
+                  src={topThree[0].avatar || '/default-avatar.png'}
                   alt={topThree[0].username}
-                  className='relative w-full h-full rounded-full border-4 border-yellow-500'
+                  width={96}
+                  height={96}
+                  className='relative rounded-full border-4 border-yellow-500'
                 />
                 <div className='absolute -bottom-2 -right-2'>
                   {getRankIcon(1)}
@@ -482,10 +487,12 @@ export default function Leaderboard({
                 </Badge>
               </div>
               <div className='relative w-20 h-20 mx-auto mb-3'>
-                <img
-                  src={topThree[2].avatar}
+                <Image
+                  src={topThree[2].avatar || '/default-avatar.png'}
                   alt={topThree[2].username}
-                  className='w-full h-full rounded-full border-4 border-orange-600'
+                  width={80}
+                  height={80}
+                  className='rounded-full border-4 border-orange-600'
                 />
                 <div className='absolute -bottom-1 -right-1'>
                   {getRankIcon(3)}
@@ -522,10 +529,12 @@ export default function Leaderboard({
                 )}
               </div>
               <div className='relative'>
-                <img
-                  src={currentUserData.avatar}
+                <Image
+                  src={currentUserData.avatar || '/default-avatar.png'}
                   alt={currentUserData.username}
-                  className='w-12 h-12 rounded-full border-2 border-blue-500'
+                  width={48}
+                  height={48}
+                  className='rounded-full border-2 border-blue-500'
                 />
                 <Badge
                   variant='success'
@@ -634,15 +643,21 @@ export default function Leaderboard({
                       </td>
                       <td className='px-4 py-4 whitespace-nowrap'>
                         <div className='flex items-center gap-3'>
-                          <img
-                            src={entry.avatar}
-                            alt={entry.username}
-                            className={`w-10 h-10 rounded-full ${
+                          <div
+                            className={`relative w-10 h-10 ${
                               entry.isCurrentUser
-                                ? 'border-2 border-blue-500'
+                                ? 'ring-2 ring-blue-500 rounded-full'
                                 : ''
                             }`}
-                          />
+                          >
+                            <Image
+                              src={entry.avatar || '/default-avatar.png'}
+                              alt={entry.username}
+                              width={40}
+                              height={40}
+                              className='rounded-full'
+                            />
+                          </div>
                           <div>
                             <div className='flex items-center gap-2'>
                               <span className='font-medium text-gray-900 dark:text-white'>

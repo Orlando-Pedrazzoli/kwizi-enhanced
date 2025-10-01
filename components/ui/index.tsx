@@ -43,7 +43,9 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       gradient = false,
       className = '',
       disabled,
-      ...props
+      onClick,
+      type,
+      ...restProps
     },
     ref
   ) => {
@@ -91,7 +93,8 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
           ${className}
         `}
         disabled={disabled || isLoading}
-        {...props}
+        onClick={onClick}
+        type={type}
       >
         {isLoading ? <Loader2 className='animate-spin' /> : leftIcon}
         {children}
