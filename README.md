@@ -1,59 +1,145 @@
-# 🎯 Kwizi Enhanced - Quiz App Interativo de Nova Geração
+# 🎯 QuizLabHub - Plataforma de Aprendizado Tech Interativa
 
-Um aplicativo de quiz moderno, interativo e gamificado construído com Next.js 14, React, TypeScript e Tailwind CSS.
+[![Next.js](https://img.shields.io/badge/Next.js-14-black?style=for-the-badge&logo=next.js)](https://nextjs.org/)
+[![React](https://img.shields.io/badge/React-18-blue?style=for-the-badge&logo=react)](https://react.dev/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5-blue?style=for-the-badge&logo=typescript)](https://www.typescriptlang.org/)
+[![Tailwind](https://img.shields.io/badge/Tailwind-3-38bdf8?style=for-the-badge&logo=tailwind-css)](https://tailwindcss.com/)
+[![Framer Motion](https://img.shields.io/badge/Framer_Motion-11-ff0055?style=for-the-badge&logo=framer)](https://www.framer.com/motion/)
 
-![Kwizi Enhanced](https://img.shields.io/badge/Next.js-14-black?style=for-the-badge&logo=next.js)
-![React](https://img.shields.io/badge/React-18-blue?style=for-the-badge&logo=react)
-![TypeScript](https://img.shields.io/badge/TypeScript-5-blue?style=for-the-badge&logo=typescript)
-![Tailwind](https://img.shields.io/badge/Tailwind-3-38bdf8?style=for-the-badge&logo=tailwind-css)
+## 🚀 Sobre o Projeto
 
-## ✨ Funcionalidades Principais
+QuizLabHub é uma plataforma educacional gamificada focada em tecnologia, oferecendo uma experiência de aprendizado interativa e envolvente. Com 7 categorias especializadas e mais de 140 questões cuidadosamente elaboradas, a plataforma transforma o estudo de tecnologia em uma jornada divertida e recompensadora.
 
-### 🎮 Experiência do Usuário
-- **Pop-ups Explicativos Interativos**: Cada resposta vem com uma explicação detalhada, ajudando o usuário a entender o conceito
-- **Feedback Visual Imediato**: Animações e cores indicam respostas corretas/incorretas de forma clara
-- **Múltiplos Temas**: 6 categorias diversas (Programação, Ciências, História, Geografia, Matemática, Cultura Pop)
-- **Sistema de Pontuação Dinâmico**: Pontos baseados na dificuldade das questões
+### 🌟 Diferenciais
 
-### 🏆 Gamificação
-- **Sistema de Conquistas**: 6 badges desbloqueáveis para motivar o aprendizado contínuo
-  - 🏆 Primeira Vitória
-  - ⭐ Pontuação Perfeita
-  - ⚡ Velocista (< 2 minutos)
-  - 🗺️ Explorador (todos os temas)
-  - 👑 Mestre (1000+ pontos)
-  - 🎯 Consistente (10+ quizzes)
+- **🎮 Gamificação Completa**: Sistema de pontos, conquistas, níveis e desafios diários
+- **📊 Dois Modos de Jogo**: Competitivo (com pontuação) e Estudo (foco no aprendizado)
+- **🎨 Design Moderno 2025**: Interface baseada nas últimas tendências de UX/UI
+- **🧠 Aprendizado Adaptativo**: Explicações detalhadas para cada questão
+- **📈 Analytics Avançado**: Acompanhe seu progresso com estatísticas detalhadas
+- **🌙 Dark/Light Mode**: Alternância suave entre temas
+- **🔊 Feedback Sonoro**: Sons interativos para melhor experiência
+- **💾 Persistência de Dados**: Progresso salvo automaticamente
 
-- **Ranking Pessoal**: Acompanhe suas melhores pontuações por categoria
-- **Estatísticas Detalhadas**: Monitore seu progresso total
-- **Progresso Visual**: Barra de progresso animada durante o quiz
+## 📚 Categorias de Aprendizado
 
-### 🎨 Design & UX (Seguindo as Melhores Práticas de 2025)
-- **Dark Mode**: Alternância suave entre temas claro e escuro
-- **Design Responsivo**: Funciona perfeitamente em desktop, tablet e mobile
-- **Animações Suaves**: Micro-interações com Framer Motion
-- **Acessibilidade**: Alto contraste, ARIA labels, navegação por teclado
-- **Gradientes Modernos**: Cada categoria tem seu gradiente único
-- **Interface Limpa**: Design minimalista e intuitivo
+### 1. 💻 **Web Development**
 
-### 💾 Persistência de Dados
-- **LocalStorage**: Progresso salvo automaticamente
-- **Histórico Completo**: Todas as estatísticas são mantidas entre sessões
+Desenvolvimento Full Stack com foco em tecnologias modernas:
 
-## 🚀 Como Executar
+- HTML5, CSS3, JavaScript ES6+
+- React, Next.js, Node.js
+- APIs RESTful e GraphQL
+- Git e controle de versão
+
+### 2. 🎨 **UX/UI Design**
+
+Design centrado no usuário:
+
+- Princípios de design e usabilidade
+- Prototipagem e wireframing
+- Design systems e componentes
+- Ferramentas modernas (Figma, Adobe XD)
+
+### 3. 📊 **Data Analytics**
+
+Análise e visualização de dados:
+
+- Excel avançado e SQL
+- Python para análise de dados
+- Dashboards e KPIs
+- Estatística aplicada
+
+### 4. 🔒 **Cybersecurity**
+
+Segurança digital e proteção de dados:
+
+- Fundamentos de segurança
+- Ethical hacking e pen testing
+- Criptografia e protocolos seguros
+- Conformidade e GDPR
+
+### 5. 🤖 **Data Science & Machine Learning**
+
+Ciência de dados e IA:
+
+- Python e bibliotecas (Pandas, NumPy, Scikit-learn)
+- Algoritmos de ML supervisionado e não supervisionado
+- Deep Learning e redes neurais
+- Feature engineering e validação
+
+### 6. ☁️ **DevOps & Cloud Computing**
+
+Operações e infraestrutura moderna:
+
+- CI/CD e automação
+- Docker e Kubernetes
+- AWS, Azure, GCP
+- Infrastructure as Code (Terraform)
+
+### 7. 🧠 **AI Engineering**
+
+Engenharia de IA e LLMs:
+
+- Prompt engineering
+- RAG e embeddings
+- Fine-tuning e transfer learning
+- Implementação de soluções com IA
+
+## ✨ Funcionalidades
+
+### 🎯 Sistema de Gamificação
+
+- **Pontuação Dinâmica**: Pontos baseados em dificuldade e tempo
+- **Sistema de Combo**: Bônus por respostas consecutivas corretas
+- **Níveis por Categoria**: Progrida de Iniciante a Expert
+- **Conquistas Desbloqueáveis**: 6 badges especiais
+- **Desafios Diários**: Missões para ganhar XP extra
+
+### 📊 Dashboard Analítico
+
+- **Estatísticas Gerais**: Taxa de acerto, tempo de estudo, questões respondidas
+- **Progresso por Categoria**: Visualize seu domínio em cada área
+- **Histórico de Performance**: Acompanhe sua evolução
+- **Comparativo de Níveis**: Veja onde precisa melhorar
+
+### 🎨 Experiência do Usuário
+
+- **Animações Suaves**: Powered by Framer Motion
+- **Feedback Visual Instantâneo**: Cores e ícones indicativos
+- **Explicações Educativas**: Aprenda com cada resposta
+- **Interface Responsiva**: Perfeita em qualquer dispositivo
+- **Modo Estudo**: Pratique sem pressão de pontuação
+
+## 🛠️ Tecnologias Utilizadas
+
+- **Frontend Framework**: Next.js 14 (App Router)
+- **UI Library**: React 18
+- **Linguagem**: TypeScript 5
+- **Estilização**: Tailwind CSS 3
+- **Animações**: Framer Motion 11
+- **Ícones**: Lucide React
+- **State Management**: React Hooks
+- **Storage**: LocalStorage API
+
+## 📦 Instalação e Execução
 
 ### Pré-requisitos
+
 - Node.js 18+ instalado
 - npm, yarn, pnpm ou bun
 
-### Instalação
+### Passo a Passo
 
-1. **Clone ou baixe o projeto**
+1. **Clone o repositório**
+
 ```bash
-cd kwizi-enhanced
+git clone https://github.com/seu-usuario/quizlabhub.git
+cd quizlabhub
 ```
 
 2. **Instale as dependências**
+
 ```bash
 npm install
 # ou
@@ -63,6 +149,7 @@ pnpm install
 ```
 
 3. **Execute o servidor de desenvolvimento**
+
 ```bash
 npm run dev
 # ou
@@ -71,162 +158,136 @@ yarn dev
 pnpm dev
 ```
 
-4. **Abra no navegador**
+4. **Acesse a aplicação**
+
 ```
 http://localhost:3000
+```
+
+### Build para Produção
+
+```bash
+npm run build
+npm start
 ```
 
 ## 📁 Estrutura do Projeto
 
 ```
-kwizi-enhanced/
+quizlabhub/
 ├── app/
-│   ├── layout.tsx          # Layout principal com metadata
+│   ├── layout.tsx          # Layout principal com metadados
 │   ├── page.tsx            # Página inicial
-│   └── globals.css         # Estilos globais
+│   └── globals.css         # Estilos globais e animações
 ├── components/
 │   └── QuizApp.tsx         # Componente principal do quiz
 ├── data/
-│   └── quizData.ts         # Dados dos quizzes e conquistas
-├── public/                 # Arquivos estáticos
-├── package.json            # Dependências
+│   └── quizData.ts         # Banco de questões (140+ questões)
+├── public/                 # Assets estáticos
+├── package.json            # Dependências do projeto
 ├── tailwind.config.js      # Configuração do Tailwind
 ├── tsconfig.json           # Configuração do TypeScript
-└── README.md              # Este arquivo
+├── next.config.js          # Configuração do Next.js
+└── README.md              # Documentação
 ```
 
-## 🎓 Temas Disponíveis
+## 🎮 Como Jogar
 
-### 💻 Programação
-- Princípios DRY
-- JavaScript (let vs var, closures)
-- Padrões de Design
-- TypeScript
+1. **Escolha um Modo**:
 
-### 🔬 Ciências
-- Física (velocidade da luz)
-- Biologia (cromossomos, fotossíntese)
-- Química (partículas subatômicas)
-- Cosmologia (Big Bang)
+   - **Competitivo**: Ganhe pontos e suba no ranking
+   - **Estudo**: Foque no aprendizado sem pressão
 
-### 📜 História
-- Independência do Brasil
-- Presidentes dos EUA
-- Segunda Guerra Mundial
-- Antigas civilizações
-- Revolução Industrial
+2. **Selecione uma Categoria**:
 
-### 🌍 Geografia
-- Oceanos e rios
-- População mundial
-- Capitais
-- Continentes
+   - Escolha entre 7 áreas de tecnologia
+   - Veja seu nível atual em cada categoria
 
-### 🔢 Matemática
-- Raiz quadrada
-- Número Pi
-- Geometria
-- Teorema de Pitágoras
+3. **Responda as Questões**:
 
-### 🎬 Cultura Pop
-- Cinema (Oscar, MCU)
-- Música (The Beatles)
-- Séries (Breaking Bad)
-- Videogames (Fortnite)
+   - 20 questões por categoria
+   - 3 níveis de dificuldade
+   - Tempo ilimitado
 
-## 🔧 Tecnologias Utilizadas
+4. **Aprenda com Explicações**:
 
-- **Next.js 14**: Framework React com App Router
-- **React 18**: Biblioteca UI com hooks modernos
-- **TypeScript**: Tipagem estática para código mais seguro
-- **Tailwind CSS**: Utility-first CSS framework
-- **Framer Motion**: Biblioteca de animações
-- **Lucide React**: Ícones modernos e customizáveis
+   - Cada resposta tem explicação detalhada
+   - Entenda o conceito, não apenas decore
 
-## 🎯 Melhorias em Relação ao Original
+5. **Acompanhe seu Progresso**:
+   - Veja estatísticas em tempo real
+   - Desbloqueie conquistas
+   - Complete desafios diários
 
-1. **Pop-ups Explicativos**: Sistema completo de feedback com explicações detalhadas
-2. **Múltiplos Temas**: 6 categorias vs. 1 tema genérico
-3. **Sistema de Conquistas**: Gamificação completa com badges
-4. **Níveis de Dificuldade**: Questões classificadas (fácil, médio, difícil)
-5. **Pontuação Dinâmica**: Pontos baseados na dificuldade
-6. **Dark Mode**: Suporte completo a tema escuro
-7. **Animações**: Transições suaves com Framer Motion
-8. **Estatísticas**: Dashboard completo de progresso
-9. **Melhor UX**: Interface moderna seguindo as tendências de 2025
-10. **Persistência**: LocalStorage para salvar progresso
-11. **Timer**: Cronômetro para medir tempo de conclusão
-12. **Responsividade**: Design otimizado para todos os dispositivos
+## 🏆 Sistema de Conquistas
 
-## 📊 Pesquisa de Mercado
+| Conquista                 | Descrição                      | Como Desbloquear             |
+| ------------------------- | ------------------------------ | ---------------------------- |
+| 🏆 **Primeira Vitória**   | Complete seu primeiro quiz     | Termine qualquer quiz        |
+| ⭐ **Pontuação Perfeita** | Acerte todas as questões       | 100% de acerto em um quiz    |
+| ⚡ **Velocista**          | Complete em menos de 2 minutos | Seja rápido e preciso        |
+| 🗺️ **Explorador**         | Jogue todas as categorias      | Experimente todas as 7 áreas |
+| 👑 **Mestre**             | Acumule 1000 pontos            | Dedicação e consistência     |
+| 🎯 **Consistente**        | Complete 10 quizzes            | Pratique regularmente        |
 
-Este projeto foi desenvolvido seguindo as melhores práticas de UX/UI para 2025:
+## 📈 Roadmap Futuro
 
-- **Micro-interações**: Feedback visual instantâneo
-- **Gamificação**: Elementos de jogo para aumentar engajamento
-- **Acessibilidade**: Design inclusivo para todos os usuários
-- **Performance**: Otimizado para carregamento rápido
-- **Mobile-First**: Design responsivo prioritário
-- **Dark Mode**: Suporte a preferências do sistema
-
-## 🔮 Próximas Funcionalidades (Roadmap)
-
-- [ ] Sistema de usuários e login
-- [ ] Leaderboard global
-- [ ] Modo multiplayer
-- [ ] Criação de quizzes customizados
-- [ ] Mais categorias de temas
-- [ ] Integração com API externa
-- [ ] Sons e efeitos sonoros
-- [ ] Modo de treino (sem pontuação)
-- [ ] Compartilhamento de resultados nas redes sociais
-- [ ] Suporte a múltiplos idiomas
-
-## 📝 Licença
-
-Este projeto é open source e está disponível sob a licença MIT.
+- [ ] **Modo Multiplayer**: Compete com amigos em tempo real
+- [ ] **Sistema de Login**: Salve progresso na nuvem
+- [ ] **Leaderboard Global**: Ranking mundial de jogadores
+- [ ] **Questões Dinâmicas**: Integração com API de questões
+- [ ] **Modo Maratona**: Questões infinitas até errar
+- [ ] **Certificados**: Gere certificados de conclusão
+- [ ] **Trilhas de Aprendizado**: Cursos estruturados
+- [ ] **Integração com LMS**: Conecte com plataformas educacionais
+- [ ] **App Mobile**: Versões iOS e Android
+- [ ] **Modo Offline**: Jogue sem internet
 
 ## 🤝 Contribuindo
 
-Contribuições são bem-vindas! Sinta-se à vontade para:
+Contribuições são sempre bem-vindas! Veja como contribuir:
 
 1. Fork o projeto
-2. Criar uma branch (`git checkout -b feature/NovaFuncionalidade`)
-3. Commit suas mudanças (`git commit -m 'Adiciona nova funcionalidade'`)
+2. Crie sua feature branch (`git checkout -b feature/NovaFuncionalidade`)
+3. Commit suas mudanças (`git commit -m 'Add: Nova funcionalidade'`)
 4. Push para a branch (`git push origin feature/NovaFuncionalidade`)
-5. Abrir um Pull Request
+5. Abra um Pull Request
 
-## 👨‍💻 Desenvolvimento
+### Diretrizes de Contribuição
 
-Para adicionar novos quizzes, edite o arquivo `data/quizData.ts` e siga a estrutura:
+- Mantenha o código limpo e bem documentado
+- Siga os padrões de código existentes
+- Adicione testes quando aplicável
+- Atualize a documentação conforme necessário
+- Certifique-se de que o build passa sem erros
 
-```typescript
-{
-  id: 'novo-tema',
-  name: 'Novo Tema',
-  icon: '🎨',
-  description: 'Descrição do tema',
-  color: 'from-color-500 to-color-600',
-  questions: [
-    {
-      id: 1,
-      question: 'Pergunta aqui?',
-      options: ['Opção 1', 'Opção 2', 'Opção 3', 'Opção 4'],
-      correctAnswer: 0, // índice da resposta correta
-      explanation: 'Explicação detalhada...',
-      difficulty: 'easy', // 'easy' | 'medium' | 'hard'
-      points: 10
-    }
-  ]
-}
-```
+## 📝 Licença
+
+Este projeto está sob a licença MIT. Veja o arquivo [LICENSE](LICENSE) para mais detalhes.
+
+## 👥 Time
+
+Desenvolvido com ❤️ pela equipe QuizLabHub:
+
+- Design e UX aprimorados com base nas tendências de 2025
+- Questões elaboradas por especialistas em cada área
+- Gamificação inspirada nas melhores práticas educacionais
 
 ## 📞 Contato
 
-Para dúvidas ou sugestões, abra uma issue no GitHub.
+- **GitHub Issues**: Para bugs e sugestões de features
+- **Discussions**: Para dúvidas e discussões gerais
+- **Email**: contato@quizlabhub.com
+
+## 🙏 Agradecimentos
+
+- Comunidade Next.js e React
+- Contribuidores open source
+- Todos os beta testers
+- Você por usar nossa plataforma!
 
 ---
 
-**Feito com ❤️ usando Next.js e React**
+**🎯 QuizLabHub - Transformando o aprendizado de tecnologia em uma jornada épica!**
 
-🎯 Aprenda de forma interativa e divertida com Kwizi Enhanced!
+_Última atualização: Dezembro 2024_
