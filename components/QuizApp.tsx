@@ -1537,7 +1537,7 @@ export default function QuizApp() {
                     buttonClass =
                       'bg-gradient-to-r from-red-50 to-pink-50 dark:from-red-900/20 dark:to-pink-900/20 border-2 border-red-500';
                   }
-                } else if (isSelected) {
+                } else if (isSelected && gameState.selectedCategory) {
                   buttonClass = `bg-gradient-to-r ${gameState.selectedCategory.color} border-2 border-transparent text-white`;
                 }
 
