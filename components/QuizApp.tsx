@@ -38,6 +38,8 @@ import {
   BarChart3,
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import Navbar from './Navbar';
+import Footer from './Footer';
 
 interface GameState {
   selectedCategory: QuizCategory | null;
@@ -65,6 +67,7 @@ interface UserProgress {
   correctAnswers: number;
   studyTime: number;
   lastPlayed: string;
+  userLevel: number;
 }
 
 export default function QuizApp() {
@@ -98,10 +101,33 @@ export default function QuizApp() {
     correctAnswers: 0,
     studyTime: 0,
     lastPlayed: new Date().toISOString(),
+    userLevel: 1,
   });
 
   const [showWelcomeBack, setShowWelcomeBack] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
+
+  // Calcular o nível do usuário baseado na pontuação total
+  useEffect(() => {
+    const calculateUserLevel = () => {
+      const score = userProgress.totalScore;
+      if (score >= 10000) return 10;
+      if (score >= 5000) return 9;
+      if (score >= 3000) return 8;
+      if (score >= 2000) return 7;
+      if (score >= 1500) return 6;
+      if (score >= 1000) return 5;
+      if (score >= 700) return 4;
+      if (score >= 500) return 3;
+      if (score >= 200) return 2;
+      return 1;
+    };
+
+    setUserProgress(prev => ({
+      ...prev,
+      userLevel: calculateUserLevel(),
+    }));
+  }, [userProgress.totalScore]);
 
   // Carregar progresso do localStorage
   useEffect(() => {
@@ -160,9 +186,6 @@ export default function QuizApp() {
     type: 'correct' | 'wrong' | 'achievement' | 'complete'
   ) => {
     if (!soundEnabled) return;
-
-    // Aqui você pode adicionar sons reais
-    // Por enquanto, vamos simular com console.log
     console.log(`Playing sound: ${type}`);
   };
 
@@ -464,6 +487,13 @@ export default function QuizApp() {
             : 'bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50'
         }`}
       >
+        <Navbar
+          darkMode={darkMode}
+          setDarkMode={setDarkMode}
+          userScore={userProgress.totalScore}
+          userLevel={userProgress.userLevel}
+        />
+
         {/* Background animado */}
         <div className='absolute inset-0 overflow-hidden'>
           <div
@@ -486,7 +516,7 @@ export default function QuizApp() {
                 initial={{ y: -100, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 exit={{ y: -100, opacity: 0 }}
-                className='fixed top-4 left-1/2 transform -translate-x-1/2 z-50 max-w-[90vw]'
+                className='fixed top-24 left-1/2 transform -translate-x-1/2 z-50 max-w-[90vw]'
               >
                 <div className='bg-gradient-to-r from-purple-600 to-blue-600 text-white px-4 sm:px-6 py-2 sm:py-3 rounded-full shadow-2xl flex items-center gap-2 sm:gap-3'>
                   <Sparkles className='w-4 sm:w-5 h-4 sm:h-5 animate-pulse' />
@@ -498,23 +528,14 @@ export default function QuizApp() {
             )}
           </AnimatePresence>
 
-          {/* Header */}
+          {/* Header simplificado - removendo elementos duplicados da Navbar */}
           <motion.header
             initial={{ y: -20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
-            className='flex flex-col sm:flex-row justify-between items-center mb-6 sm:mb-12 gap-4'
+            className='flex justify-end items-center mb-6 sm:mb-12 gap-4'
           >
-            <div className='text-center sm:text-left'>
-              <h1 className='text-4xl sm:text-5xl md:text-6xl font-black bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent'>
-                QuizLabHub
-              </h1>
-              <p className='text-gray-600 dark:text-gray-400 mt-1 sm:mt-2 flex items-center justify-center sm:justify-start gap-2 text-sm sm:text-base'>
-                <GraduationCap className='w-4 sm:w-5 h-4 sm:h-5' />
-                Domine as habilidades tech do futuro
-              </p>
-            </div>
             <div className='flex gap-2 sm:gap-3 flex-wrap justify-center'>
-              {/* Modo de Estudo - Corrigido com cores apropriadas */}
+              {/* Modo de Estudo */}
               <button
                 onClick={() =>
                   setGameState(prev => ({
@@ -584,23 +605,10 @@ export default function QuizApp() {
                   <VolumeX className='w-5 sm:w-6 h-5 sm:h-6 text-gray-500 dark:text-gray-500' />
                 )}
               </button>
-
-              {/* Tema */}
-              <button
-                onClick={() => setDarkMode(!darkMode)}
-                className='p-2 sm:p-3 rounded-xl bg-white dark:bg-gray-800 shadow-lg hover:shadow-xl transition-all hover:scale-105'
-                aria-label='Alternar tema'
-              >
-                {darkMode ? (
-                  <Sun className='w-5 sm:w-6 h-5 sm:h-6 text-yellow-400' />
-                ) : (
-                  <Moon className='w-5 sm:w-6 h-5 sm:h-6 text-indigo-600' />
-                )}
-              </button>
             </div>
           </motion.header>
 
-          {/* Dashboard Principal - Responsivo para Mobile */}
+          {/* Dashboard Principal */}
           <div className='grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6 mb-6 sm:mb-12'>
             {/* Card Principal - Stats */}
             <motion.div
@@ -634,7 +642,7 @@ export default function QuizApp() {
                 </div>
               </div>
 
-              {/* Grid de Métricas - Responsivo */}
+              {/* Grid de Métricas */}
               <div className='grid grid-cols-2 gap-3 sm:gap-4'>
                 <motion.div
                   whileHover={{ scale: 1.05 }}
@@ -690,7 +698,7 @@ export default function QuizApp() {
                 </motion.div>
               </div>
 
-              {/* Progresso por Categoria - Responsivo */}
+              {/* Progresso por Categoria */}
               <div className='mt-4 sm:mt-6'>
                 <h3 className='text-base sm:text-lg font-semibold text-gray-900 dark:text-white mb-3 sm:mb-4'>
                   Progresso por Categoria
@@ -1012,7 +1020,7 @@ export default function QuizApp() {
             )}
           </AnimatePresence>
 
-          {/* Categorias - Grid Responsivo */}
+          {/* Categorias */}
           <div>
             <div className='flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 sm:mb-6'>
               <h2 className='text-xl sm:text-2xl font-bold text-gray-900 dark:text-white mb-2 sm:mb-0'>
@@ -1121,6 +1129,8 @@ export default function QuizApp() {
             </div>
           </div>
         </div>
+
+        <Footer darkMode={darkMode} />
       </div>
     );
   }
@@ -1150,6 +1160,13 @@ export default function QuizApp() {
             : 'bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50'
         }`}
       >
+        <Navbar
+          darkMode={darkMode}
+          setDarkMode={setDarkMode}
+          userScore={userProgress.totalScore}
+          userLevel={userProgress.userLevel}
+        />
+
         <div className='container mx-auto px-3 sm:px-4 py-4 sm:py-8 max-w-5xl'>
           <motion.div
             initial={{ scale: 0.9, opacity: 0 }}
@@ -1355,6 +1372,8 @@ export default function QuizApp() {
             </div>
           </motion.div>
         </div>
+
+        <Footer darkMode={darkMode} />
       </div>
     );
   }
@@ -1379,6 +1398,13 @@ export default function QuizApp() {
           : 'bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50'
       }`}
     >
+      <Navbar
+        darkMode={darkMode}
+        setDarkMode={setDarkMode}
+        userScore={userProgress.totalScore}
+        userLevel={userProgress.userLevel}
+      />
+
       <div className='container mx-auto px-3 sm:px-4 py-4 sm:py-8 max-w-4xl'>
         {/* Header do Quiz */}
         <div className='flex justify-between items-center mb-4 sm:mb-6'>
@@ -1429,19 +1455,6 @@ export default function QuizApp() {
                 <Volume2 className='w-4 sm:w-5 h-4 sm:h-5 text-gray-700 dark:text-gray-300' />
               ) : (
                 <VolumeX className='w-4 sm:w-5 h-4 sm:h-5 text-gray-500 dark:text-gray-500' />
-              )}
-            </button>
-
-            {/* Theme Toggle */}
-            <button
-              onClick={() => setDarkMode(!darkMode)}
-              className='p-2.5 sm:p-3 rounded-xl sm:rounded-2xl bg-white dark:bg-gray-800 shadow-lg hover:shadow-xl transition-all'
-              aria-label='Alternar tema'
-            >
-              {darkMode ? (
-                <Sun className='w-4 sm:w-5 h-4 sm:h-5 text-yellow-400' />
-              ) : (
-                <Moon className='w-4 sm:w-5 h-4 sm:h-5 text-indigo-600' />
               )}
             </button>
           </div>
@@ -1711,6 +1724,8 @@ export default function QuizApp() {
           )}
         </AnimatePresence>
       </div>
+
+      <Footer darkMode={darkMode} />
     </div>
   );
 }
