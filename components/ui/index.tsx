@@ -3,7 +3,6 @@
 import React, {
   ReactNode,
   ButtonHTMLAttributes,
-  HTMLAttributes,
   forwardRef,
   useState,
 } from 'react';
@@ -95,6 +94,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         disabled={disabled || isLoading}
         onClick={onClick}
         type={type}
+        {...restProps}
       >
         {isLoading ? <Loader2 className='animate-spin' /> : leftIcon}
         {children}
@@ -107,11 +107,19 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
 Button.displayName = 'Button';
 
 // ============= CARD COMPONENT =============
-interface CardProps extends HTMLAttributes<HTMLDivElement> {
+interface CardProps {
+  children: ReactNode;
   variant?: 'default' | 'bordered' | 'elevated' | 'gradient' | 'glass';
   padding?: 'none' | 'sm' | 'md' | 'lg' | 'xl';
   hoverable?: boolean;
   clickable?: boolean;
+  className?: string;
+  onClick?: () => void;
+  id?: string;
+  role?: string;
+  'aria-label'?: string;
+  'aria-labelledby'?: string;
+  'aria-describedby'?: string;
 }
 
 export const Card = forwardRef<HTMLDivElement, CardProps>(
@@ -124,7 +132,9 @@ export const Card = forwardRef<HTMLDivElement, CardProps>(
       clickable = false,
       className = '',
       onClick,
-      ...props
+      id,
+      role,
+      ...ariaProps
     },
     ref
   ) => {
@@ -167,7 +177,9 @@ export const Card = forwardRef<HTMLDivElement, CardProps>(
         `}
         onClick={onClick}
         whileHover={hoverable || clickable || onClick ? { y: -4 } : {}}
-        {...props}
+        id={id}
+        role={role}
+        {...ariaProps}
       >
         {children}
       </motion.div>
@@ -267,11 +279,13 @@ export const Modal: React.FC<ModalProps> = ({
 };
 
 // ============= BADGE COMPONENT =============
-interface BadgeProps extends HTMLAttributes<HTMLSpanElement> {
+interface BadgeProps {
+  children: ReactNode;
   variant?: 'default' | 'success' | 'warning' | 'danger' | 'info' | 'purple';
   size?: 'xs' | 'sm' | 'md' | 'lg';
   rounded?: boolean;
   pulse?: boolean;
+  className?: string;
 }
 
 export const Badge = forwardRef<HTMLSpanElement, BadgeProps>(
@@ -283,7 +297,6 @@ export const Badge = forwardRef<HTMLSpanElement, BadgeProps>(
       rounded = false,
       pulse = false,
       className = '',
-      ...props
     },
     ref
   ) => {
@@ -321,7 +334,6 @@ export const Badge = forwardRef<HTMLSpanElement, BadgeProps>(
           ${pulse ? 'animate-pulse' : ''}
           ${className}
         `}
-        {...props}
       >
         {children}
       </span>
