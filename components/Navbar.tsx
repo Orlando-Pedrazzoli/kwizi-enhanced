@@ -6,30 +6,31 @@ import {
   GraduationCap,
   Menu,
   X,
-  Home,
-  Trophy,
-  BarChart3,
   BookOpen,
-  Users,
-  HelpCircle,
-  Github,
-  Twitter,
-  Linkedin,
+  Brain,
+  BarChart3,
+  Target,
+  Clock,
+  Bookmark,
+  History,
+  Settings,
   Moon,
   Sun,
-  Sparkles,
-  Code,
   Zap,
-  Target,
-  Brain,
+  StickyNote,
+  RefreshCw,
+  BookMarked,
 } from 'lucide-react';
-import Link from 'next/link';
 
 interface NavbarProps {
   darkMode: boolean;
   setDarkMode: (value: boolean) => void;
   userScore?: number;
   userLevel?: number;
+  onShowHistory?: () => void;
+  onShowNotes?: () => void;
+  onShowProgress?: () => void;
+  onShowSettings?: () => void;
 }
 
 export default function Navbar({
@@ -37,10 +38,13 @@ export default function Navbar({
   setDarkMode,
   userScore = 0,
   userLevel = 1,
+  onShowHistory,
+  onShowNotes,
+  onShowProgress,
+  onShowSettings,
 }: NavbarProps) {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [activeSection, setActiveSection] = useState('home');
 
   // Detectar scroll para efeito de blur
   useEffect(() => {
@@ -64,60 +68,38 @@ export default function Navbar({
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  const navLinks = [
+  const studyTools = [
     {
-      name: 'Início',
-      href: '#home',
-      icon: <Home className='w-4 h-4' />,
-      color: 'from-blue-500 to-cyan-500',
+      name: 'Meu Progresso',
+      icon: <BarChart3 className='w-5 h-5' />,
+      color: 'text-blue-600 dark:text-blue-400',
+      bgColor: 'bg-blue-50 dark:bg-blue-900/20',
+      onClick: onShowProgress,
+      description: 'Acompanhe seu desempenho',
     },
     {
-      name: 'Categorias',
-      href: '#categories',
-      icon: <BookOpen className='w-4 h-4' />,
-      color: 'from-purple-500 to-pink-500',
+      name: 'Histórico',
+      icon: <History className='w-5 h-5' />,
+      color: 'text-purple-600 dark:text-purple-400',
+      bgColor: 'bg-purple-50 dark:bg-purple-900/20',
+      onClick: onShowHistory,
+      description: 'Revise questões anteriores',
     },
     {
-      name: 'Rankings',
-      href: '#rankings',
-      icon: <Trophy className='w-4 h-4' />,
-      color: 'from-yellow-500 to-orange-500',
+      name: 'Minhas Notas',
+      icon: <StickyNote className='w-5 h-5' />,
+      color: 'text-yellow-600 dark:text-yellow-400',
+      bgColor: 'bg-yellow-50 dark:bg-yellow-900/20',
+      onClick: onShowNotes,
+      description: 'Anotações de estudo',
     },
     {
-      name: 'Estatísticas',
-      href: '#stats',
-      icon: <BarChart3 className='w-4 h-4' />,
-      color: 'from-green-500 to-emerald-500',
-    },
-    {
-      name: 'Comunidade',
-      href: '#community',
-      icon: <Users className='w-4 h-4' />,
-      color: 'from-indigo-500 to-purple-500',
-    },
-    {
-      name: 'Ajuda',
-      href: '#help',
-      icon: <HelpCircle className='w-4 h-4' />,
-      color: 'from-red-500 to-pink-500',
-    },
-  ];
-
-  const socialLinks = [
-    {
-      icon: <Github className='w-5 h-5' />,
-      href: 'https://github.com',
-      label: 'GitHub',
-    },
-    {
-      icon: <Twitter className='w-5 h-5' />,
-      href: 'https://twitter.com',
-      label: 'Twitter',
-    },
-    {
-      icon: <Linkedin className='w-5 h-5' />,
-      href: 'https://linkedin.com',
-      label: 'LinkedIn',
+      name: 'Revisão',
+      icon: <RefreshCw className='w-5 h-5' />,
+      color: 'text-green-600 dark:text-green-400',
+      bgColor: 'bg-green-50 dark:bg-green-900/20',
+      onClick: () => {},
+      description: 'Sistema de repetição espaçada',
     },
   ];
 
@@ -145,7 +127,10 @@ export default function Navbar({
               whileTap={{ scale: 0.95 }}
               className='flex items-center gap-3'
             >
-              <Link href='/' className='flex items-center gap-3'>
+              <div
+                className='flex items-center gap-3 cursor-pointer'
+                onClick={() => window.location.reload()}
+              >
                 <motion.div
                   animate={{
                     rotate: [0, 10, -10, 10, 0],
@@ -167,7 +152,7 @@ export default function Navbar({
                     QuizLabHub
                   </h1>
                   <p className='text-[10px] text-gray-600 dark:text-gray-400 font-medium'>
-                    Domine o Futuro Tech
+                    Sua Plataforma de Estudo Pessoal
                   </p>
                 </div>
                 <div className='sm:hidden'>
@@ -175,91 +160,92 @@ export default function Navbar({
                     QLH
                   </h1>
                 </div>
-              </Link>
+              </div>
             </motion.div>
 
-            {/* Links de Navegação - Desktop */}
+            {/* Ferramentas de Estudo - Desktop */}
             <div className='hidden lg:flex items-center gap-2 xl:gap-3'>
-              {navLinks.map(link => (
-                <motion.div
-                  key={link.name}
-                  whileHover={{ y: -2 }}
+              {studyTools.map((tool, index) => (
+                <motion.button
+                  key={tool.name}
+                  whileHover={{ y: -2, scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
+                  onClick={tool.onClick}
+                  className={`group px-3 xl:px-4 py-2 rounded-xl font-medium text-sm transition-all ${
+                    darkMode
+                      ? 'hover:bg-gray-800 text-gray-300 hover:text-white'
+                      : 'hover:bg-gray-100 text-gray-600 hover:text-gray-900'
+                  }`}
                 >
-                  <Link
-                    href={link.href}
-                    onClick={() => setActiveSection(link.href.slice(1))}
-                    className={`group relative px-3 xl:px-4 py-2 rounded-xl font-medium text-sm transition-all ${
-                      activeSection === link.href.slice(1)
-                        ? darkMode
-                          ? 'bg-gray-800 text-white'
-                          : 'bg-gray-100 text-gray-900'
-                        : darkMode
-                        ? 'text-gray-300 hover:text-white hover:bg-gray-800/50'
-                        : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100/50'
-                    }`}
-                  >
-                    <span className='flex items-center gap-2'>
-                      <span
-                        className={`transition-transform group-hover:scale-110 ${
-                          activeSection === link.href.slice(1)
-                            ? `text-transparent bg-gradient-to-r ${link.color} bg-clip-text`
-                            : ''
-                        }`}
-                      >
-                        {link.icon}
-                      </span>
-                      <span>{link.name}</span>
+                  <div className='flex items-center gap-2'>
+                    <span
+                      className={`transition-transform group-hover:scale-110 ${tool.color}`}
+                    >
+                      {tool.icon}
                     </span>
-                    {activeSection === link.href.slice(1) && (
-                      <motion.div
-                        layoutId='activeSection'
-                        className={`absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r ${link.color}`}
-                      />
-                    )}
-                  </Link>
-                </motion.div>
+                    <span className='hidden xl:inline'>{tool.name}</span>
+                  </div>
+                </motion.button>
               ))}
             </div>
 
-            {/* Ações do Usuário */}
+            {/* Status do Usuário */}
             <div className='flex items-center gap-2 sm:gap-3'>
-              {/* Score Display - Desktop */}
+              {/* Estatísticas de Estudo */}
               <motion.div
                 whileHover={{ scale: 1.05 }}
-                className='hidden sm:flex items-center gap-2 px-3 py-1.5 bg-gradient-to-r from-yellow-500/10 to-orange-500/10 rounded-xl border border-yellow-500/20'
+                className='hidden sm:flex items-center gap-3'
               >
-                <Target className='w-4 h-4 text-yellow-600 dark:text-yellow-400' />
-                <span className='text-sm font-bold text-gray-900 dark:text-white'>
-                  {userScore.toLocaleString()}
-                </span>
-                <span className='text-xs text-gray-600 dark:text-gray-400'>
-                  pts
-                </span>
+                {/* Pontuação */}
+                <div className='flex items-center gap-2 px-3 py-1.5 bg-gradient-to-r from-yellow-500/10 to-orange-500/10 rounded-xl border border-yellow-500/20'>
+                  <Target className='w-4 h-4 text-yellow-600 dark:text-yellow-400' />
+                  <div className='flex flex-col'>
+                    <span className='text-xs text-gray-500 dark:text-gray-400'>
+                      Pontuação
+                    </span>
+                    <span className='text-sm font-bold text-gray-900 dark:text-white -mt-0.5'>
+                      {userScore.toLocaleString()}
+                    </span>
+                  </div>
+                </div>
+
+                {/* Nível */}
+                <div className='flex items-center gap-2 px-3 py-1.5 bg-gradient-to-r from-purple-500/10 to-pink-500/10 rounded-xl border border-purple-500/20'>
+                  <Zap className='w-4 h-4 text-purple-600 dark:text-purple-400' />
+                  <div className='flex flex-col'>
+                    <span className='text-xs text-gray-500 dark:text-gray-400'>
+                      Nível
+                    </span>
+                    <span className='text-sm font-bold text-gray-900 dark:text-white -mt-0.5'>
+                      {userLevel}
+                    </span>
+                  </div>
+                </div>
               </motion.div>
 
-              {/* Level Badge - Desktop */}
-              <motion.div
-                whileHover={{ scale: 1.05 }}
-                className='hidden sm:flex items-center gap-2 px-3 py-1.5 bg-gradient-to-r from-purple-500/10 to-pink-500/10 rounded-xl border border-purple-500/20'
-              >
-                <Zap className='w-4 h-4 text-purple-600 dark:text-purple-400' />
-                <span className='text-sm font-bold text-gray-900 dark:text-white'>
-                  Nível {userLevel}
-                </span>
-              </motion.div>
-
-              {/* Quick Actions */}
+              {/* Ações Rápidas */}
               <div className='flex items-center gap-1 sm:gap-2'>
-                {/* Modo Aprendizado Rápido */}
+                {/* Modo Foco */}
                 <motion.button
                   whileHover={{ scale: 1.1 }}
                   whileTap={{ scale: 0.9 }}
                   className='relative p-2 rounded-xl bg-gradient-to-r from-green-500/10 to-emerald-500/10 hover:from-green-500/20 hover:to-emerald-500/20 transition-all group'
-                  aria-label='Modo Aprendizado Rápido'
+                  aria-label='Modo Foco de Estudo'
+                  title='Modo Foco de Estudo'
                 >
                   <Brain className='w-5 h-5 text-green-600 dark:text-green-400 group-hover:rotate-12 transition-transform' />
-                  <span className='absolute -top-1 -right-1 w-2 h-2 bg-green-500 rounded-full animate-pulse' />
+                </motion.button>
+
+                {/* Configurações */}
+                <motion.button
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.9 }}
+                  onClick={onShowSettings}
+                  className='p-2 rounded-xl bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 transition-all'
+                  aria-label='Configurações'
+                  title='Configurações'
+                >
+                  <Settings className='w-5 h-5 text-gray-700 dark:text-gray-300' />
                 </motion.button>
 
                 {/* Tema */}
@@ -269,6 +255,7 @@ export default function Navbar({
                   onClick={() => setDarkMode(!darkMode)}
                   className='p-2 rounded-xl bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 transition-all'
                   aria-label='Alternar tema'
+                  title={darkMode ? 'Modo Claro' : 'Modo Escuro'}
                 >
                   <AnimatePresence mode='wait'>
                     {darkMode ? (
@@ -341,7 +328,7 @@ export default function Navbar({
               } shadow-xl`}
             >
               <div className='container mx-auto px-4 py-4 space-y-2'>
-                {/* User Stats Mobile */}
+                {/* Status Mobile */}
                 <div className='flex items-center gap-3 pb-3 mb-3 border-b border-gray-200 dark:border-gray-700'>
                   <motion.div
                     initial={{ x: -20, opacity: 0 }}
@@ -367,85 +354,51 @@ export default function Navbar({
                   </motion.div>
                 </div>
 
-                {/* Navigation Links Mobile */}
-                {navLinks.map((link, index) => (
-                  <motion.div
-                    key={link.name}
+                {/* Ferramentas de Estudo Mobile */}
+                {studyTools.map((tool, index) => (
+                  <motion.button
+                    key={tool.name}
                     initial={{ x: -50, opacity: 0 }}
                     animate={{ x: 0, opacity: 1 }}
                     transition={{ delay: index * 0.05 }}
+                    onClick={() => {
+                      tool.onClick?.();
+                      setIsMobileMenuOpen(false);
+                    }}
+                    className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${
+                      darkMode
+                        ? 'text-gray-300 hover:bg-gray-700/50'
+                        : 'text-gray-600 hover:bg-gray-50'
+                    }`}
                   >
-                    <Link
-                      href={link.href}
-                      onClick={() => {
-                        setActiveSection(link.href.slice(1));
-                        setIsMobileMenuOpen(false);
-                      }}
-                      className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${
-                        activeSection === link.href.slice(1)
-                          ? darkMode
-                            ? 'bg-gradient-to-r from-gray-700 to-gray-600 text-white'
-                            : 'bg-gradient-to-r from-gray-100 to-gray-50 text-gray-900'
-                          : darkMode
-                          ? 'text-gray-300 hover:bg-gray-700/50'
-                          : 'text-gray-600 hover:bg-gray-50'
-                      }`}
-                    >
-                      <div
-                        className={`p-2 rounded-lg bg-gradient-to-br ${link.color} bg-opacity-10`}
-                      >
-                        {link.icon}
+                    <div className={`p-2 rounded-lg ${tool.bgColor}`}>
+                      <span className={tool.color}>{tool.icon}</span>
+                    </div>
+                    <div className='flex-1 text-left'>
+                      <div className='font-medium'>{tool.name}</div>
+                      <div className='text-xs opacity-75'>
+                        {tool.description}
                       </div>
-                      <span className='font-medium'>{link.name}</span>
-                      {activeSection === link.href.slice(1) && (
-                        <motion.span
-                          initial={{ scale: 0 }}
-                          animate={{ scale: 1 }}
-                          className='ml-auto'
-                        >
-                          <Sparkles className='w-4 h-4 text-yellow-500' />
-                        </motion.span>
-                      )}
-                    </Link>
-                  </motion.div>
+                    </div>
+                  </motion.button>
                 ))}
 
-                {/* Social Links Mobile */}
-                <div className='pt-3 mt-3 border-t border-gray-200 dark:border-gray-700'>
-                  <p className='text-xs text-gray-500 dark:text-gray-400 mb-3 px-4'>
-                    Conecte-se conosco
-                  </p>
-                  <div className='flex items-center gap-2 px-4'>
-                    {socialLinks.map((social, index) => (
-                      <motion.a
-                        key={social.label}
-                        href={social.href}
-                        target='_blank'
-                        rel='noopener noreferrer'
-                        initial={{ y: 20, opacity: 0 }}
-                        animate={{ y: 0, opacity: 1 }}
-                        transition={{ delay: 0.3 + index * 0.05 }}
-                        whileHover={{ scale: 1.1 }}
-                        whileTap={{ scale: 0.9 }}
-                        className='p-2 rounded-lg bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 transition-all'
-                        aria-label={social.label}
-                      >
-                        {social.icon}
-                      </motion.a>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Quick Actions Mobile */}
+                {/* Botão de Ação Rápida */}
                 <motion.div
                   initial={{ y: 20, opacity: 0 }}
                   animate={{ y: 0, opacity: 1 }}
                   transition={{ delay: 0.4 }}
                   className='pt-3'
                 >
-                  <button className='w-full py-3 px-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-bold rounded-xl shadow-lg hover:shadow-xl transition-all flex items-center justify-center gap-2'>
-                    <Code className='w-5 h-5' />
-                    Começar Quiz Rápido
+                  <button
+                    onClick={() => {
+                      setIsMobileMenuOpen(false);
+                      window.scrollTo({ top: 0, behavior: 'smooth' });
+                    }}
+                    className='w-full py-3 px-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-bold rounded-xl shadow-lg hover:shadow-xl transition-all flex items-center justify-center gap-2'
+                  >
+                    <BookOpen className='w-5 h-5' />
+                    Continuar Estudando
                   </button>
                 </motion.div>
               </div>

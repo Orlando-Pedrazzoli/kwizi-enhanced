@@ -36,10 +36,18 @@ import {
   VolumeX,
   Info,
   BarChart3,
+  History,
+  StickyNote,
+  RefreshCw,
+  Settings,
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Navbar from './Navbar';
 import Footer from './Footer';
+import StudyHistory from './StudyHistory';
+import StudyNotes from './StudyNotes';
+import PersonalProgress from './PersonalProgress';
+import SpacedRepetition from './SpacedRepetition';
 
 interface GameState {
   selectedCategory: QuizCategory | null;
@@ -73,7 +81,10 @@ interface UserProgress {
 export default function QuizApp() {
   const [darkMode, setDarkMode] = useState(true);
   const [showAchievements, setShowAchievements] = useState(false);
-  const [showStats, setShowStats] = useState(false);
+  const [showHistory, setShowHistory] = useState(false);
+  const [showNotes, setShowNotes] = useState(false);
+  const [showProgress, setShowProgress] = useState(false);
+  const [showSpacedRepetition, setShowSpacedRepetition] = useState(false);
   const [soundEnabled, setSoundEnabled] = useState(true);
   const [gameState, setGameState] = useState<GameState>({
     selectedCategory: null,
@@ -87,7 +98,7 @@ export default function QuizApp() {
     startTime: null,
     endTime: null,
     streak: 0,
-    mode: 'competitive',
+    mode: 'study',
   });
 
   const [userProgress, setUserProgress] = useState<UserProgress>({
@@ -302,6 +313,62 @@ export default function QuizApp() {
       totalQuestionsAnswered: prev.totalQuestionsAnswered + 1,
       correctAnswers: prev.correctAnswers + (isCorrect ? 1 : 0),
     }));
+
+    // Salvar no histórico
+    const historyEntry = {
+      id: Date.now().toString(),
+      categoryId: gameState.selectedCategory.id,
+      categoryName: gameState.selectedCategory.name,
+      categoryIcon: gameState.selectedCategory.icon,
+      question: currentQuestion.question,
+      selectedAnswer: currentQuestion.options[answerIndex],
+      correctAnswer: currentQuestion.options[currentQuestion.correctAnswer],
+      isCorrect,
+      explanation: currentQuestion.explanation,
+      difficulty: currentQuestion.difficulty,
+      timestamp: new Date().toISOString(),
+      timeTaken: 0,
+      points: currentQuestion.points,
+    };
+
+    const history = JSON.parse(localStorage.getItem('quizHistory') || '[]');
+    history.unshift(historyEntry);
+    localStorage.setItem('quizHistory', JSON.stringify(history.slice(0, 100))); // Manter apenas últimas 100
+
+    // Adicionar à fila de revisão espaçada se errou
+    if (!isCorrect) {
+      const reviewQueue = JSON.parse(
+        localStorage.getItem('spacedRepetitionQueue') || '[]'
+      );
+      const existingItem = reviewQueue.find(
+        (item: any) => item.question === currentQuestion.question
+      );
+
+      if (!existingItem) {
+        reviewQueue.push({
+          id: Date.now().toString(),
+          question: currentQuestion.question,
+          answer: currentQuestion.options[currentQuestion.correctAnswer],
+          explanation: currentQuestion.explanation,
+          category: gameState.selectedCategory.name,
+          categoryIcon: gameState.selectedCategory.icon,
+          difficulty: currentQuestion.difficulty,
+          lastReviewed: new Date().toISOString(),
+          nextReviewDate: new Date(Date.now() + 86400000).toISOString(), // Revisar em 24h
+          reviewCount: 0,
+          easeFactor: 2.5,
+          interval: 1,
+          correctStreak: 0,
+          incorrectCount: 1,
+          averageResponseTime: 0,
+          confidence: 0,
+        });
+        localStorage.setItem(
+          'spacedRepetitionQueue',
+          JSON.stringify(reviewQueue)
+        );
+      }
+    }
   };
 
   const nextQuestion = () => {
@@ -492,7 +559,40 @@ export default function QuizApp() {
           setDarkMode={setDarkMode}
           userScore={userProgress.totalScore}
           userLevel={userProgress.userLevel}
+          onShowHistory={() => setShowHistory(true)}
+          onShowNotes={() => setShowNotes(true)}
+          onShowProgress={() => setShowProgress(true)}
+          onShowSettings={() => {}}
         />
+
+        {/* Modais de Ferramentas de Estudo */}
+        <AnimatePresence>
+          {showHistory && (
+            <StudyHistory
+              darkMode={darkMode}
+              onClose={() => setShowHistory(false)}
+            />
+          )}
+          {showNotes && (
+            <StudyNotes
+              darkMode={darkMode}
+              onClose={() => setShowNotes(false)}
+            />
+          )}
+          {showProgress && (
+            <PersonalProgress
+              darkMode={darkMode}
+              onClose={() => setShowProgress(false)}
+              userProgress={userProgress}
+            />
+          )}
+          {showSpacedRepetition && (
+            <SpacedRepetition
+              darkMode={darkMode}
+              onClose={() => setShowSpacedRepetition(false)}
+            />
+          )}
+        </AnimatePresence>
 
         {/* Background animado */}
         <div className='absolute inset-0 overflow-hidden'>
@@ -521,19 +621,28 @@ export default function QuizApp() {
                 <div className='bg-gradient-to-r from-purple-600 to-blue-600 text-white px-4 sm:px-6 py-2 sm:py-3 rounded-full shadow-2xl flex items-center gap-2 sm:gap-3'>
                   <Sparkles className='w-4 sm:w-5 h-4 sm:h-5 animate-pulse' />
                   <span className='font-semibold text-sm sm:text-base'>
-                    Bem-vindo de volta! Pronto para mais aprendizado?
+                    Bem-vindo de volta! Pronto para continuar aprendendo?
                   </span>
                 </div>
               </motion.div>
             )}
           </AnimatePresence>
 
-          {/* Header simplificado - removendo elementos duplicados da Navbar */}
+          {/* Header com Ferramentas de Estudo */}
           <motion.header
             initial={{ y: -20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
-            className='flex justify-end items-center mb-6 sm:mb-12 gap-4'
+            className='flex flex-col sm:flex-row justify-between items-center mb-6 sm:mb-12 gap-4'
           >
+            <div>
+              <h1 className='text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white mb-2'>
+                Sua Jornada de Aprendizado
+              </h1>
+              <p className='text-gray-600 dark:text-gray-400'>
+                {getMotivationalMessage()}
+              </p>
+            </div>
+
             <div className='flex gap-2 sm:gap-3 flex-wrap justify-center'>
               {/* Modo de Estudo */}
               <button
@@ -558,18 +667,14 @@ export default function QuizApp() {
                 </div>
               </button>
 
-              {/* Estatísticas */}
+              {/* Revisão Espaçada */}
               <button
-                onClick={() => setShowStats(!showStats)}
-                className='p-2 sm:p-3 rounded-xl bg-white dark:bg-gray-800 shadow-lg hover:shadow-xl transition-all hover:scale-105 group'
-                aria-label='Estatísticas'
+                onClick={() => setShowSpacedRepetition(true)}
+                className='p-2 sm:p-3 rounded-xl bg-gradient-to-r from-green-500/10 to-blue-500/10 border border-green-500/20 hover:shadow-xl transition-all hover:scale-105 group'
+                aria-label='Revisão Espaçada'
               >
-                <BarChart3
-                  className={`w-5 sm:w-6 h-5 sm:h-6 transition-colors ${
-                    darkMode
-                      ? 'text-purple-400 group-hover:text-purple-300'
-                      : 'text-purple-600 group-hover:text-purple-500'
-                  }`}
+                <RefreshCw
+                  className={`w-5 sm:w-6 h-5 sm:h-6 transition-colors text-green-600 dark:text-green-400 group-hover:rotate-180 transition-transform duration-500`}
                 />
               </button>
 
@@ -623,23 +728,15 @@ export default function QuizApp() {
                     Seu Progresso
                   </h2>
                   <p className='text-xs sm:text-sm text-gray-600 dark:text-gray-400'>
-                    {getMotivationalMessage()}
+                    Continue sua jornada de aprendizado personalizada
                   </p>
                 </div>
-                <div
-                  className={`px-3 sm:px-4 py-2 rounded-xl w-full sm:w-auto text-center ${
-                    darkMode
-                      ? 'bg-gradient-to-r from-purple-900/30 to-blue-900/30'
-                      : 'bg-gradient-to-r from-purple-100 to-blue-100'
-                  }`}
+                <button
+                  onClick={() => setShowProgress(true)}
+                  className='px-3 py-1.5 bg-gradient-to-r from-blue-600 to-purple-600 text-white text-sm font-medium rounded-xl hover:shadow-lg transition-all'
                 >
-                  <span className='text-xs sm:text-sm text-gray-600 dark:text-gray-400'>
-                    Taxa de Acerto
-                  </span>
-                  <p className='text-xl sm:text-2xl font-bold text-gray-900 dark:text-white'>
-                    {getAccuracyRate()}%
-                  </p>
-                </div>
+                  Ver Detalhes
+                </button>
               </div>
 
               {/* Grid de Métricas */}
@@ -663,10 +760,10 @@ export default function QuizApp() {
                 >
                   <CheckCircle2 className='w-6 sm:w-8 h-6 sm:h-8 text-green-600 dark:text-green-400 mb-1 sm:mb-2' />
                   <p className='text-[10px] sm:text-sm text-gray-600 dark:text-gray-400'>
-                    Quizzes
+                    Taxa de Acerto
                   </p>
                   <p className='text-lg sm:text-2xl font-bold text-gray-900 dark:text-white'>
-                    {userProgress.quizzesCompleted}
+                    {getAccuracyRate()}%
                   </p>
                 </motion.div>
 
@@ -676,11 +773,10 @@ export default function QuizApp() {
                 >
                   <Award className='w-6 sm:w-8 h-6 sm:h-8 text-purple-600 dark:text-purple-400 mb-1 sm:mb-2' />
                   <p className='text-[10px] sm:text-sm text-gray-600 dark:text-gray-400'>
-                    Conquistas
+                    Questões Respondidas
                   </p>
                   <p className='text-lg sm:text-2xl font-bold text-gray-900 dark:text-white'>
-                    {userProgress.unlockedAchievements.length}/
-                    {achievements.length}
+                    {userProgress.totalQuestionsAnswered}
                   </p>
                 </motion.div>
 
@@ -690,7 +786,7 @@ export default function QuizApp() {
                 >
                   <Clock className='w-6 sm:w-8 h-6 sm:h-8 text-yellow-600 dark:text-yellow-400 mb-1 sm:mb-2' />
                   <p className='text-[10px] sm:text-sm text-gray-600 dark:text-gray-400'>
-                    Tempo Estudo
+                    Tempo de Estudo
                   </p>
                   <p className='text-lg sm:text-2xl font-bold text-gray-900 dark:text-white'>
                     {Math.floor((userProgress.studyTime || 0) / 60)}h
@@ -739,7 +835,7 @@ export default function QuizApp() {
               </div>
             </motion.div>
 
-            {/* Card Lateral - Desafios Diários */}
+            {/* Card Lateral - Ferramentas de Estudo */}
             <motion.div
               initial={{ y: 20, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
@@ -747,62 +843,88 @@ export default function QuizApp() {
               className='bg-white dark:bg-gray-800 rounded-2xl sm:rounded-3xl p-4 sm:p-6 md:p-8 shadow-xl'
             >
               <div className='flex items-center gap-2 sm:gap-3 mb-4 sm:mb-6'>
-                <Sparkles className='w-5 sm:w-6 h-5 sm:h-6 text-yellow-500' />
+                <Brain className='w-5 sm:w-6 h-5 sm:h-6 text-purple-500' />
                 <h2 className='text-xl sm:text-2xl font-bold text-gray-900 dark:text-white'>
-                  Desafios do Dia
+                  Ferramentas de Estudo
                 </h2>
               </div>
 
               <div className='space-y-3 sm:space-y-4'>
-                <div className='p-3 sm:p-4 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 rounded-xl'>
-                  <div className='flex items-center justify-between mb-2'>
-                    <span className='font-semibold text-sm sm:text-base text-gray-900 dark:text-white'>
-                      Complete 3 Quizzes
-                    </span>
-                    <span className='text-[10px] sm:text-xs bg-yellow-500 text-white px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-full'>
-                      +50 XP
-                    </span>
+                <motion.button
+                  whileHover={{ scale: 1.02, x: 5 }}
+                  onClick={() => setShowHistory(true)}
+                  className='w-full p-3 sm:p-4 bg-gradient-to-r from-purple-50 to-blue-50 dark:from-purple-900/20 dark:to-blue-900/20 rounded-xl flex items-center justify-between group'
+                >
+                  <div className='flex items-center gap-3'>
+                    <History className='w-5 h-5 text-purple-600 dark:text-purple-400' />
+                    <div className='text-left'>
+                      <p className='font-semibold text-gray-900 dark:text-white'>
+                        Histórico de Estudos
+                      </p>
+                      <p className='text-xs text-gray-600 dark:text-gray-400'>
+                        Revise questões anteriores
+                      </p>
+                    </div>
                   </div>
-                  <div className='w-full bg-gray-200 dark:bg-gray-600 rounded-full h-1.5 sm:h-2'>
-                    <div
-                      className='h-full bg-gradient-to-r from-blue-500 to-purple-500 rounded-full'
-                      style={{
-                        width: `${Math.min(
-                          (userProgress.quizzesCompleted % 3) * 33.33,
-                          100
-                        )}%`,
-                      }}
-                    />
-                  </div>
-                </div>
+                  <ChevronRight className='w-5 h-5 text-gray-400 group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors' />
+                </motion.button>
 
-                <div className='p-3 sm:p-4 bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 rounded-xl'>
-                  <div className='flex items-center justify-between mb-2'>
-                    <span className='font-semibold text-sm sm:text-base text-gray-900 dark:text-white'>
-                      Resposta Perfeita
-                    </span>
-                    <span className='text-[10px] sm:text-xs bg-green-500 text-white px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-full'>
-                      +30 XP
-                    </span>
+                <motion.button
+                  whileHover={{ scale: 1.02, x: 5 }}
+                  onClick={() => setShowNotes(true)}
+                  className='w-full p-3 sm:p-4 bg-gradient-to-r from-yellow-50 to-orange-50 dark:from-yellow-900/20 dark:to-orange-900/20 rounded-xl flex items-center justify-between group'
+                >
+                  <div className='flex items-center gap-3'>
+                    <StickyNote className='w-5 h-5 text-yellow-600 dark:text-yellow-400' />
+                    <div className='text-left'>
+                      <p className='font-semibold text-gray-900 dark:text-white'>
+                        Minhas Notas
+                      </p>
+                      <p className='text-xs text-gray-600 dark:text-gray-400'>
+                        Anotações e insights
+                      </p>
+                    </div>
                   </div>
-                  <p className='text-xs sm:text-sm text-gray-600 dark:text-gray-400'>
-                    Acerte todas em um quiz
-                  </p>
-                </div>
+                  <ChevronRight className='w-5 h-5 text-gray-400 group-hover:text-yellow-600 dark:group-hover:text-yellow-400 transition-colors' />
+                </motion.button>
 
-                <div className='p-3 sm:p-4 bg-gradient-to-r from-orange-50 to-red-50 dark:from-orange-900/20 dark:to-red-900/20 rounded-xl'>
-                  <div className='flex items-center justify-between mb-2'>
-                    <span className='font-semibold text-sm sm:text-base text-gray-900 dark:text-white'>
-                      Explorador Tech
-                    </span>
-                    <span className='text-[10px] sm:text-xs bg-orange-500 text-white px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-full'>
-                      +100 XP
-                    </span>
+                <motion.button
+                  whileHover={{ scale: 1.02, x: 5 }}
+                  onClick={() => setShowSpacedRepetition(true)}
+                  className='w-full p-3 sm:p-4 bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 rounded-xl flex items-center justify-between group'
+                >
+                  <div className='flex items-center gap-3'>
+                    <RefreshCw className='w-5 h-5 text-green-600 dark:text-green-400' />
+                    <div className='text-left'>
+                      <p className='font-semibold text-gray-900 dark:text-white'>
+                        Revisão Espaçada
+                      </p>
+                      <p className='text-xs text-gray-600 dark:text-gray-400'>
+                        Maximize sua retenção
+                      </p>
+                    </div>
                   </div>
-                  <p className='text-xs sm:text-sm text-gray-600 dark:text-gray-400'>
-                    Jogue todas as categorias
-                  </p>
-                </div>
+                  <ChevronRight className='w-5 h-5 text-gray-400 group-hover:text-green-600 dark:group-hover:text-green-400 transition-colors' />
+                </motion.button>
+
+                <motion.button
+                  whileHover={{ scale: 1.02, x: 5 }}
+                  onClick={() => setShowProgress(true)}
+                  className='w-full p-3 sm:p-4 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 rounded-xl flex items-center justify-between group'
+                >
+                  <div className='flex items-center gap-3'>
+                    <BarChart3 className='w-5 h-5 text-blue-600 dark:text-blue-400' />
+                    <div className='text-left'>
+                      <p className='font-semibold text-gray-900 dark:text-white'>
+                        Análise de Progresso
+                      </p>
+                      <p className='text-xs text-gray-600 dark:text-gray-400'>
+                        Estatísticas detalhadas
+                      </p>
+                    </div>
+                  </div>
+                  <ChevronRight className='w-5 h-5 text-gray-400 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors' />
+                </motion.button>
               </div>
             </motion.div>
           </div>
@@ -886,145 +1008,11 @@ export default function QuizApp() {
             )}
           </AnimatePresence>
 
-          {/* Modal de Estatísticas */}
-          <AnimatePresence>
-            {showStats && (
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                className='fixed inset-0 bg-black/60 backdrop-blur-md z-50 flex items-center justify-center p-4'
-                onClick={() => setShowStats(false)}
-              >
-                <motion.div
-                  initial={{ scale: 0.9, opacity: 0 }}
-                  animate={{ scale: 1, opacity: 1 }}
-                  exit={{ scale: 0.9, opacity: 0 }}
-                  className='bg-white dark:bg-gray-800 rounded-2xl sm:rounded-3xl p-4 sm:p-6 md:p-8 max-w-3xl w-full max-h-[80vh] overflow-y-auto'
-                  onClick={e => e.stopPropagation()}
-                >
-                  <div className='flex items-center justify-between mb-4 sm:mb-6'>
-                    <h2 className='text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white'>
-                      📊 Estatísticas Detalhadas
-                    </h2>
-                    <button
-                      onClick={() => setShowStats(false)}
-                      className='p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-xl transition-colors'
-                    >
-                      <XCircle className='w-5 sm:w-6 h-5 sm:h-6' />
-                    </button>
-                  </div>
-
-                  <div className='space-y-4 sm:space-y-6'>
-                    {/* Performance Geral */}
-                    <div>
-                      <h3 className='text-lg sm:text-xl font-semibold text-gray-900 dark:text-white mb-3 sm:mb-4'>
-                        Performance Geral
-                      </h3>
-                      <div className='grid grid-cols-2 gap-3 sm:gap-4'>
-                        <div className='bg-blue-50 dark:bg-blue-900/20 p-3 sm:p-4 rounded-xl'>
-                          <p className='text-xs sm:text-sm text-gray-600 dark:text-gray-400'>
-                            Questões Respondidas
-                          </p>
-                          <p className='text-xl sm:text-2xl font-bold text-gray-900 dark:text-white'>
-                            {userProgress.totalQuestionsAnswered}
-                          </p>
-                        </div>
-                        <div className='bg-green-50 dark:bg-green-900/20 p-3 sm:p-4 rounded-xl'>
-                          <p className='text-xs sm:text-sm text-gray-600 dark:text-gray-400'>
-                            Respostas Corretas
-                          </p>
-                          <p className='text-xl sm:text-2xl font-bold text-gray-900 dark:text-white'>
-                            {userProgress.correctAnswers}
-                          </p>
-                        </div>
-                        <div className='bg-purple-50 dark:bg-purple-900/20 p-3 sm:p-4 rounded-xl'>
-                          <p className='text-xs sm:text-sm text-gray-600 dark:text-gray-400'>
-                            Taxa de Acerto
-                          </p>
-                          <p className='text-xl sm:text-2xl font-bold text-gray-900 dark:text-white'>
-                            {getAccuracyRate()}%
-                          </p>
-                        </div>
-                        <div className='bg-yellow-50 dark:bg-yellow-900/20 p-3 sm:p-4 rounded-xl'>
-                          <p className='text-xs sm:text-sm text-gray-600 dark:text-gray-400'>
-                            Tempo Total
-                          </p>
-                          <p className='text-xl sm:text-2xl font-bold text-gray-900 dark:text-white'>
-                            {Math.floor((userProgress.studyTime || 0) / 60)}h
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Performance por Categoria */}
-                    <div>
-                      <h3 className='text-lg sm:text-xl font-semibold text-gray-900 dark:text-white mb-3 sm:mb-4'>
-                        Performance por Categoria
-                      </h3>
-                      <div className='space-y-2 sm:space-y-3'>
-                        {quizCategories.map(category => {
-                          const score =
-                            userProgress.bestScores[category.id] || 0;
-                          const maxScore = category.questions.length * 30;
-                          const percentage = (score / maxScore) * 100;
-                          const level = getCategoryLevel(category.id);
-
-                          return (
-                            <div
-                              key={category.id}
-                              className='bg-gray-50 dark:bg-gray-700/50 p-3 sm:p-4 rounded-xl'
-                            >
-                              <div className='flex flex-col sm:flex-row sm:items-center sm:justify-between mb-2'>
-                                <div className='flex items-center gap-2 sm:gap-3'>
-                                  <span className='text-xl sm:text-2xl'>
-                                    {category.icon}
-                                  </span>
-                                  <div>
-                                    <p className='font-semibold text-sm sm:text-base text-gray-900 dark:text-white'>
-                                      {category.name}
-                                    </p>
-                                    <p
-                                      className={`text-xs sm:text-sm ${level.color}`}
-                                    >
-                                      {level.title} - Nível {level.level}
-                                    </p>
-                                  </div>
-                                </div>
-                                <div className='text-right mt-2 sm:mt-0'>
-                                  <p className='text-xl sm:text-2xl font-bold text-gray-900 dark:text-white'>
-                                    {score}
-                                  </p>
-                                  <p className='text-xs sm:text-sm text-gray-600 dark:text-gray-400'>
-                                    pontos
-                                  </p>
-                                </div>
-                              </div>
-                              <div className='w-full bg-gray-200 dark:bg-gray-600 rounded-full h-2 sm:h-3'>
-                                <motion.div
-                                  initial={{ width: 0 }}
-                                  animate={{
-                                    width: `${Math.min(percentage, 100)}%`,
-                                  }}
-                                  className={`h-full rounded-full bg-gradient-to-r ${category.color}`}
-                                />
-                              </div>
-                            </div>
-                          );
-                        })}
-                      </div>
-                    </div>
-                  </div>
-                </motion.div>
-              </motion.div>
-            )}
-          </AnimatePresence>
-
           {/* Categorias */}
           <div>
             <div className='flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 sm:mb-6'>
               <h2 className='text-xl sm:text-2xl font-bold text-gray-900 dark:text-white mb-2 sm:mb-0'>
-                Escolha sua Trilha de Aprendizado
+                Escolha sua Área de Estudo
               </h2>
               <div
                 className={`px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-medium ${
@@ -1112,7 +1100,7 @@ export default function QuizApp() {
                       ) : (
                         <div className='flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm font-medium text-gray-500 dark:text-gray-400'>
                           <Sparkles className='w-3 sm:w-4 h-3 sm:h-4' />
-                          <span>Nova trilha disponível!</span>
+                          <span>Nova área disponível!</span>
                         </div>
                       )}
 
