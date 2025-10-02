@@ -10,7 +10,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { X, Loader2, Check, AlertCircle, Info } from 'lucide-react';
 
 // ============= BUTTON COMPONENT =============
-interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+interface ButtonProps {
+  children: ReactNode;
   variant?:
     | 'primary'
     | 'secondary'
@@ -26,6 +27,19 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   fullWidth?: boolean;
   rounded?: boolean;
   gradient?: boolean;
+  className?: string;
+  disabled?: boolean;
+  onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
+  type?: 'button' | 'submit' | 'reset';
+  id?: string;
+  name?: string;
+  value?: string;
+  form?: string;
+  'aria-label'?: string;
+  'aria-labelledby'?: string;
+  'aria-describedby'?: string;
+  'aria-pressed'?: boolean;
+  'aria-expanded'?: boolean;
 }
 
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
@@ -43,8 +57,12 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       className = '',
       disabled,
       onClick,
-      type,
-      ...restProps
+      type = 'button',
+      id,
+      name,
+      value,
+      form,
+      ...ariaProps
     },
     ref
   ) => {
@@ -94,7 +112,11 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         disabled={disabled || isLoading}
         onClick={onClick}
         type={type}
-        {...restProps}
+        id={id}
+        name={name}
+        value={value}
+        form={form}
+        {...ariaProps}
       >
         {isLoading ? <Loader2 className='animate-spin' /> : leftIcon}
         {children}
